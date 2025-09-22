@@ -20,11 +20,10 @@ public class Ejercicio6 {
     static int determinarNumArchivos(String contenido, int cantidadCaracteres) {
         return contenido.length() / cantidadCaracteres;
     }
-
-    // static String[] dividirContenidoArchivos(String contenidoArchivo, int
-    // numArchivos, int numCaracteres) {
-    // return contenidoArchivo.splitWithDelimiters("", numCaracteres);
-    // }
+    //TODO no va bien
+    static String[] dividirContenidoArchivosLineas(String contenidoArchivo) {
+        return contenidoArchivo.splitWithDelimiters("\n", 50);
+    }
 
     static String[] dividirContenidoArchivos(String contenidoArchivo, int numArchivos, int numCaracteres) {
         int longitudTotal = contenidoArchivo.length();
@@ -49,8 +48,11 @@ public class Ejercicio6 {
     }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        int numMaxCaracteres = 5;
-        escribirArchivo((dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
-                determinarNumArchivos(leerArchivo("ejemplo.txt"), numMaxCaracteres), numMaxCaracteres)));
+        // int numMaxCaracteres = 20;
+        int numLineas = 2;
+        // escribirArchivo((dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
+        //         determinarNumArchivos(leerArchivo("ejemplo.txt"), numMaxCaracteres), numMaxCaracteres)));
+        escribirArchivo((dividirContenidoArchivosLineas(leerArchivo("ejemplo.txt"))));
     }
+
 }
