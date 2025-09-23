@@ -20,20 +20,17 @@ public class Ejercicio6 {
     static int determinarNumArchivos(String contenido, int cantidadCaracteres) {
         return contenido.length() / cantidadCaracteres;
     }
-    //TODO no va bien
-    static String[] dividirContenidoArchivosLineas(String contenidoArchivo) {
-        return contenidoArchivo.splitWithDelimiters("\n", 50);
-    }
 
     static String[] dividirContenidoArchivos(String contenidoArchivo, int numArchivos, int numCaracteres) {
         int longitudTotal = contenidoArchivo.length();
-        int numPartes = (int) Math.ceil((double) longitudTotal / numCaracteres);
-        String[] partes = new String[numPartes];
+        String[] partes = new String[numArchivos];
+        int inicio = 0;
 
-        for (int i = 0; i < numPartes; i++) {
-            int inicio = i * numCaracteres;
+        for (int i = 0; i < numArchivos; i++) {
+            inicio = i * numCaracteres;
             int fin = Math.min(inicio + numCaracteres, longitudTotal);
             partes[i] = contenidoArchivo.substring(inicio, fin);
+            inicio = fin;
         }
 
         return partes;
@@ -43,16 +40,28 @@ public class Ejercicio6 {
         for (int i = 0; i < contenidoArchivos.length; i++) {
             try (FileWriter fw = new FileWriter((String.format("archivo%d.txt", i)))) {
                 fw.write(contenidoArchivos[i]);
+            } catch (IOException e) {
+
             }
         }
     }
+    //TODO acabar
+    static String[] dividirLineasArchivos(String nomArchivo) throws FileNotFoundException {
+        String contenidoArchivo[] = new String[] {};
+        Scanner sc = new Scanner(new File(nomArchivo));
+        while (sc.hasNext()) {
+            contenidoArchivo = sc.nextLine().split("\n");
+        }
+        return contenidoArchivo;
+    }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        // int numMaxCaracteres = 20;
+        int numCaracteres = 5;
+        int numArchivos = 3;
         int numLineas = 2;
-        // escribirArchivo((dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
-        //         determinarNumArchivos(leerArchivo("ejemplo.txt"), numMaxCaracteres), numMaxCaracteres)));
-        escribirArchivo((dividirContenidoArchivosLineas(leerArchivo("ejemplo.txt"))));
+        // escribirArchivo(dividirContenidoArchivos(leerArchivo("ejemplo.txt"), numArchivos, numCaracteres));
+        escribirArchivo(dividirLineasArchivos("ejemplo.txt"));
+
     }
 
 }
