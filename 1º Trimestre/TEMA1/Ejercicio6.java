@@ -45,12 +45,19 @@ public class Ejercicio6 {
             }
         }
     }
-    //TODO acabar
-    static String[] dividirLineasArchivos(String nomArchivo) throws FileNotFoundException {
+
+    static String[] dividirLineasArchivos(String nomArchivo, int numFilas) throws IOException {
         String contenidoArchivo[] = new String[] {};
+        int j = 1;
         Scanner sc = new Scanner(new File(nomArchivo));
         while (sc.hasNext()) {
-            contenidoArchivo = sc.nextLine().split("\n");
+            try (FileWriter fw = new FileWriter(new File("archivoLineas" + (j++) + ".txt"))) {
+                for (int i = 0; i < numFilas; i++) {
+                    fw.write(sc.nextLine());
+                    fw.write(System.lineSeparator());
+                }
+            }
+
         }
         return contenidoArchivo;
     }
@@ -59,8 +66,11 @@ public class Ejercicio6 {
         int numCaracteres = 5;
         int numArchivos = 3;
         int numLineas = 2;
-        // escribirArchivo(dividirContenidoArchivos(leerArchivo("ejemplo.txt"), numArchivos, numCaracteres));
-        escribirArchivo(dividirLineasArchivos("ejemplo.txt"));
+
+        escribirArchivo(dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
+        numArchivos, numCaracteres));
+        
+        escribirArchivo(dividirLineasArchivos("ejemplo.txt", numLineas));
 
     }
 
