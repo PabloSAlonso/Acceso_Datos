@@ -1,7 +1,4 @@
-
-import java.io.Serializable;
-
-class Persona implements Serializable {
+public class Persona {
     private String nombre;
     private int edad;
 
@@ -14,8 +11,16 @@ class Persona implements Serializable {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public int getEdad() {
         return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
     }
 
 }

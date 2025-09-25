@@ -50,8 +50,72 @@ public class Ejercicio9 {
         }
     }
 
-    public static void modificarAlumnos(int codigoAlumno) {
-        
+    public static void modificarAlumnos(int codigoAlumno, String nomArchivo) throws IOException {
+        Scanner sc = new Scanner(System.in);
+        File archivoPpal = new File(nomArchivo);
+        FileInputStream fis = new FileInputStream(nomArchivo);
+        File archivoTemp = new File("temporal.dat");
+        FileOutputStream fos = new FileOutputStream(archivoTemp);
+        boolean flag = false;
+        try (DataInputStream dis = new DataInputStream(fis)) {
+            while (true) {
+                dis.readInt();
+                dis.readUTF();
+                dis.readFloat();
+                try (DataOutputStream dos = new DataOutputStream(fos)) {
+                    if (codigoAlumno == dis.readInt()) {
+                        dos.writeInt(codigoAlumno);
+                        System.out.println("Nombre: ");
+                        dos.writeUTF(sc.nextLine());
+                        System.out.println("Altura: ");
+                        dos.writeDouble(sc.nextDouble());
+                        flag = true;
+                    }
+                    dos.writeInt(dis.readInt());
+                    dos.writeUTF(dis.readUTF());
+                    dos.writeDouble(dis.readDouble());
+
+                } catch (EOFException e) {
+                    System.out.println("Fin archivo");
+                }
+                if (flag) {
+                    if (archivoPpal.delete()) {
+                        archivoTemp.renameTo(archivoPpal);
+                    }
+                } else {
+                    archivoTemp.delete();
+                }
+            }
+        }
+    }
+
+    public static void eliminarAlumnos(int codigoAlumno, String nomArchivo) throws IOException {
+        Scanner sc = new Scanner(System.in);
+        File archivoPpal = new File(nomArchivo);
+        FileInputStream fis = new FileInputStream(nomArchivo);
+        File archivoTemp = new File("temporal.dat");
+        FileOutputStream fos = new FileOutputStream(archivoTemp);
+        boolean flag = false;
+        try (DataInputStream dis = new DataInputStream(fis)) {
+            while (true) {
+                try (DataOutputStream dos = new DataOutputStream(fos)) {
+                    if (codigoAlumno != dis.readInt()) {
+                        dos.writeInt(dis.readInt());
+                        dos.writeUTF(dis.readUTF());
+                        dos.writeDouble(dis.readDouble());
+                    }
+                }
+            }
+        } catch (EOFException e) {
+            System.out.println("Fin archivo");
+        }
+        if (flag) {
+            if (archivoPpal.delete()) {
+                archivoTemp.renameTo(archivoPpal);
+            }
+        } else {
+            archivoTemp.delete();
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -73,15 +137,15 @@ public class Ejercicio9 {
                     break;
                 case 2:
                     // Código opcion 2
-
+                    consultarAlumnos(listaAlumnos);
                     break;
                 case 3:
                     // Código opcion 3
-
+                    modificarAlumnos(7, "alumnos.dat");
                     break;
                 case 4:
                     // Código opcion 4
-
+                    eliminarAlumnos(7, "alumnos.dat");
                     break;
                 case 5:
                     // Código opcion 5
