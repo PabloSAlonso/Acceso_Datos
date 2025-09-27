@@ -1,6 +1,7 @@
 public class Persona {
     public String nombre;
     public int edad;
+    private int id;
 
     public Persona(String nombre, int edad) {
         this.nombre = nombre;
@@ -23,4 +24,15 @@ public class Persona {
         this.edad = edad;
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Nombre: %10s, Edad %3d con ID: %3d", nombre, edad, id);
+    }
 }
