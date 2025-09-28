@@ -1,6 +1,6 @@
 public class Departamento {
-    public int codigo;
     public String nombre;
+    public int codigo;
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
@@ -16,6 +16,10 @@ public class Departamento {
 
     public String getNombre() {
         return nombre;
+    }
+    public Departamento(String nombre, int codigo){
+        this.nombre = nombre;
+        this.codigo = codigo;
     }
 
 }
