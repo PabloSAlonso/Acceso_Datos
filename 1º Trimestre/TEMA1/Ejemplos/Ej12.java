@@ -10,7 +10,7 @@ public class Ej12 {
         ArrayList<Cliente> clientes = new ArrayList<>();
         clientes.add(new Cliente("Denis", 5, 100.0F));
         ArrayList<Persona> personas = new ArrayList<>();
-        personas.add(new Persona("Lugonpa", 21));
+        personas.add(new Persona("Lugonpa"));
         File fichero = new File("clientes.dat");
         escribirObjetos(fichero,clientes);
         // escribirObjetos(fichero, personas);
