@@ -11,15 +11,18 @@ import java.util.Scanner;
 public class Ejercicio10 {
     /**
      * Funcion que devuelve una Persona
+     * 
      * @param nombrePersona nombre de la persona
-     * @param edad edad de la persona
+     * @param edad          edad de la persona
      * @return Un objeto tipo persona
      */
-    public static Persona crearPersona(String nombrePersona, int edad) {
-        return new Persona(nombrePersona, edad);
+    public static Persona crearPersona(String nombrePersona, int edad, int id) {
+        return new Persona(nombrePersona, edad, id);
     }
+
     /**
      * Funcion que devuelve un departamento
+     * 
      * @param nombreDepart nomre del departamento
      * @param codigoDepart codigo del departamento
      * @return Un objeto tipo Departamento
@@ -29,9 +32,11 @@ public class Ejercicio10 {
     }
 
     /**
-     * Funcion que añade un objeto si este es de tipo Persona o departamento a un ArrayList pasado como parametro
+     * Funcion que añade un objeto si este es de tipo Persona o departamento a un
+     * ArrayList pasado como parametro
+     * 
      * @param listaObj El arrayList donde se añadirá el objeto
-     * @param obj El objeto que queremos añadir
+     * @param obj      El objeto que queremos añadir
      */
     public static void añadirObjetos(ArrayList<Object> listaObj, Object obj) {
         if (obj.getClass() == Persona.class || obj.getClass() == Departamento.class) {
@@ -40,24 +45,24 @@ public class Ejercicio10 {
     }
 
     /**
-     * Funcion que escribe un archivo con objetos contenidos en una Coleccion tipo Object
-     * @param fichero el nombre que tendrá el fichero con los objetos
+     * Funcion que escribe un archivo con objetos contenidos en una Coleccion tipo
+     * Object
+     * 
+     * @param fichero  el nombre que tendrá el fichero con los objetos
      * @param listaObj la colección que pintará en el fichero
      * @throws FileNotFoundException
      */
     public static void escribirArchivo(File fichero, ArrayList<Object> listaObj) throws FileNotFoundException {
-        FileOutputStream fos = new FileOutputStream(fichero);
-        try (ObjectOutputStream out = new ObjectOutputStream(fos)) {
-            for (Object obj : listaObj) {
-                out.writeObject(obj);
-                //Escribimos ccon foreach en el archivo cada elemento de la coleccion pasada como parametro
-            }
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fichero))) {
+            out.writeObject(listaObj);
         } catch (IOException e) {
-            System.out.println("Error");
+            e.printStackTrace();
         }
     }
+
     /**
      * Funcion que muestra el contenido de un fichero
+     * 
      * @param fichero el fichero del que se mostrará el contenido
      * @return
      */
@@ -70,17 +75,19 @@ public class Ejercicio10 {
         } catch (Exception e) {
         }
         return listaObj;
-        //Hacemos un arrayList nuevo con el contenido del archivo y lo devolvemos
-        //para asi mostrar basicamente el contenido de este
+        // Hacemos un arrayList nuevo con el contenido del archivo y lo devolvemos
+        // para asi mostrar basicamente el contenido de este
     }
+
     /**
      * Funcion que elimina un objeto de una coleccion
+     * 
      * @param objetos La coleccion de la que deseamos eliminar el objeto
-     * @param obj El objeto que vamos a eliminar
+     * @param obj     El objeto que vamos a eliminar
      */
     public static void eliminarObjeto(ArrayList<Object> objetos, Object obj) {
-        for (int i = objetos.size(); i > 0; i--) {
-            if (obj.getClass() == Persona.class && objetos.get(i).getClass() == Persona.class) {
+        for (int i = objetos.size() - 1; i >= 0; i--) {
+            if (obj instanceof Persona && objetos.get(i) instanceof Persona) {
                 if (((Persona) obj).getNombre().equals(((Persona) objetos.get(i)).getNombre())) {
                     objetos.remove(i);
                 }
@@ -98,24 +105,52 @@ public class Ejercicio10 {
         ArrayList<Object> listaObjetos = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         int opcion;
+        File fichero = new File("cosas.dat");
+        int respuesta = 0;
+        int i = 0;
         do {
             System.out.println("1.- Inclusion de nuevas personas o departamentos");
             System.out.println("2.- Mostrar datos archivo");
             System.out.println("3.- Eliminar Persona o departamento");
             System.out.println("4.- Salir");
             opcion = sc.nextInt();
-            switch (opcion) { //TODO hacer main
+            switch (opcion) { // TODO hacer main
                 case 1:
                     // Código opcion 1
-
+                    System.out.println("Que deseas crear persona o departamento? (1/2)");
+                    respuesta = sc.nextInt();
+                    sc.nextLine();
+                    if (respuesta == 1) {
+                        System.out.println("Dime nombre y edad de tu nueva persona");
+                        añadirObjetos(listaObjetos, crearPersona(sc.nextLine(), sc.nextInt(), i));
+                        i++;
+                    } else {
+                        System.out.println("Dime nombre y codigo de tu nuevo departamento");
+                        añadirObjetos(listaObjetos, crearDepartamento(sc.nextLine(), sc.nextInt()));
+                        sc.nextLine();
+                    }
+                    escribirArchivo(fichero, listaObjetos);
                     break;
                 case 2:
                     // Código opcion 2
-                    
+                    listaObjetos = consultarArchivo(fichero);
+                    System.out.println(consultarArchivo(fichero));
                     break;
                 case 3:
                     // Código opcion 3
+                    // listaObjetos = consultarArchivo(fichero);
+                    System.out.println("Que deseas eliminar persona o departamento? (1/2)");
+                    respuesta = sc.nextInt();
+                    sc.nextLine();
+                    if (respuesta == 1) {
+                        System.out.println("Dime nombre de la persona que vas a eliminar");
+                        eliminarObjeto(listaObjetos, new Persona(sc.nextLine()));
 
+                    } else {
+                        System.out.println("Dime el codigo del departamento a eliminar");
+                        eliminarObjeto(listaObjetos, new Departamento(sc.nextInt()));
+                    }
+                    escribirArchivo(fichero, listaObjetos);
                     break;
                 case 4:
                     // Código opcion 4

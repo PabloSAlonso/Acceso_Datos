@@ -1,4 +1,6 @@
-public class Departamento {
+import java.io.Serializable;
+
+public class Departamento implements Serializable{
     public String nombre;
     public int codigo;
 
@@ -19,6 +21,9 @@ public class Departamento {
     }
     public Departamento(String nombre, int codigo){
         this.nombre = nombre;
+        this.codigo = codigo;
+    }
+    public Departamento(int codigo){
         this.codigo = codigo;
     }
 

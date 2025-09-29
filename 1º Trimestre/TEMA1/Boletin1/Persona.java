@@ -1,11 +1,17 @@
-public class Persona {
+import java.io.Serializable;
+
+public class Persona implements Serializable{
     public String nombre;
     public int edad;
     private int id;
 
-    public Persona(String nombre, int edad) {
+    public Persona(String nombre, int edad, int id) {
         this.nombre = nombre;
         this.edad = edad;
+        this.id = id;
+    }
+    public Persona(String nombre){
+        this.nombre = nombre;
     }
 
     public String getNombre() {
