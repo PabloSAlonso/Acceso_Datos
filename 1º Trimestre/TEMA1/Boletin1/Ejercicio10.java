@@ -134,7 +134,7 @@ public class Ejercicio10 {
                 case 2:
                     // Código opcion 2
                     listaObjetos = consultarArchivo(fichero);
-                    System.out.println(consultarArchivo(fichero));
+                    System.out.println(listaObjetos);
                     break;
                 case 3:
                     // Código opcion 3

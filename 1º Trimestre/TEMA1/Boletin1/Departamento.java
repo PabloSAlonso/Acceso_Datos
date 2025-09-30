@@ -26,5 +26,8 @@ public class Departamento implements Serializable{
     public Departamento(int codigo){
         this.codigo = codigo;
     }
+    public String toString() {
+        return String.format("Nombre: %10s, Codigo: %3d", nombre, codigo);
+    }
 
 }
