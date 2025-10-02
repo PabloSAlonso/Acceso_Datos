@@ -9,7 +9,7 @@ public class Ejercicio4 {
         FileReader fr = null;
         Map<Character, Integer> frecuencias = new HashMap<>();
         try {
-            fr = new FileReader("1º Trimestre\\TEMA1\\ejemplo.txt");
+            fr = new FileReader("ejemplo.txt");
             int codigoCaracter;
             while ((codigoCaracter = fr.read()) != -1) {
                 char caracterLeido = (char) codigoCaracter;

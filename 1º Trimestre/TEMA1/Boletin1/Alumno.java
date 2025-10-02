@@ -10,7 +10,7 @@ public class Alumno {
         this.altura = altura;
     }
     public Alumno(){
-        this(0,"",0.0f);
+        this(7,"",0.0f);
     }
 
     public String getNombre() {

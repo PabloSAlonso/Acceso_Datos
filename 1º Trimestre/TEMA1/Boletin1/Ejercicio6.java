@@ -17,23 +17,24 @@ public class Ejercicio6 {
         return contenido;
     }
 
-    // static int determinarNumArchivos(String contenido, int cantidadCaracteres) {
-    //     return contenido.length() / cantidadCaracteres;
-    // }
+    static int determinarNumArchivos(String contenido, int cantidadCaracteres) {
+        return contenido.length() / cantidadCaracteres;
+    }
 
-    static String[] dividirContenidoArchivos(String contenidoArchivo, int numArchivos, int numCaracteres) {
+    static String[] dividirContenidoArchivos(String contenidoArchivo, int numCaracteres) {
         int longitudTotal = contenidoArchivo.length();
-        String[] partes = new String[numArchivos];
+        int tamañoBuffer = 10;
+        String[] buffer = new String[tamañoBuffer];
         int inicio = 0;
 
-        for (int i = 0; i < numArchivos; i++) {
+        for (int i = 0; i < tamañoBuffer; i++) {
             inicio = i * numCaracteres;
             int fin = Math.min(inicio + numCaracteres, longitudTotal);
-            partes[i] = contenidoArchivo.substring(inicio, fin);
+            buffer[i] = contenidoArchivo.substring(inicio, fin);
             inicio = fin;
         }
 
-        return partes;
+        return buffer;
     }
 
     static void escribirArchivo(String[] contenidoArchivos) throws IOException {
@@ -67,10 +68,10 @@ public class Ejercicio6 {
         int numArchivos = 3;
         int numLineas = 2;
 
-        escribirArchivo(dividirContenidoArchivos(leerArchivo("1º Trimestre\\TEMA1\\ejemplo.txt"),
-        numArchivos, numCaracteres));
+        escribirArchivo(dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
+        numCaracteres));
         
-        // escribirArchivo(dividirLineasArchivos("1º Trimestre\\TEMA1\\ejemplo.txt", numLineas));
+        escribirArchivo(dividirLineasArchivos("ejemplo.txt", numLineas));
 
     }
 

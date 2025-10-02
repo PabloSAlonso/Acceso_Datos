@@ -12,37 +12,29 @@ import java.util.Scanner;
 public class Ejercicio9 {
 
     public static void altaAlumnos(String fichero, ArrayList<Alumno> datos) throws IOException {
-        Alumno alumno = new Alumno();
-        FileOutputStream fos = null;
-        DataOutputStream out = null;
-        try {
-            fos = new FileOutputStream(new File(fichero), true);
-            out = new DataOutputStream(fos);
-            for (Alumno al : datos) {
-                out.writeInt(al.getCodigo());
-                out.writeUTF(al.getNombre());
-                out.writeFloat(al.getAltura());
-            }
-            datos.add(alumno);
-
-        } catch (IOException e) {
-            System.out.println("Error: " +
-                    e.getLocalizedMessage());
-        } finally {
-            if (out != null)
-                out.close();
-            if (fos != null)
-                fos.close();
+        Scanner al = new Scanner(System.in);
+        System.out.println("codigo, nombre y altura de tu nuevo alumno");
+        int codigo = al.nextInt();
+        al.nextLine();
+        String nombre = al.nextLine();
+        float altura = al.nextFloat();
+        Alumno alumno = new Alumno(codigo, nombre, altura);
+        FileOutputStream fos = new FileOutputStream(new File(fichero), true);
+        try (DataOutputStream dos = new DataOutputStream(fos)) {
+            dos.writeInt(alumno.getCodigo());
+            dos.writeUTF(alumno.getNombre());
+            dos.writeFloat(alumno.getAltura());
         }
+        datos.add(alumno);
     }
 
     public static void consultarAlumnos(ArrayList<Alumno> datos) throws IOException {
         FileInputStream fis = new FileInputStream("alumnos.dat");
         try (DataInputStream dis = new DataInputStream(fis)) {
             while (true) {
-                dis.readInt();
-                dis.readUTF();
-                dis.readFloat();
+                System.out.println("Codigo: " + dis.readInt());
+                System.out.println("Nombre: " + dis.readUTF());
+                System.out.println("Altura: " + dis.readFloat());
             }
 
         } catch (EOFException e) {
@@ -51,77 +43,78 @@ public class Ejercicio9 {
     }
 
     public static void modificarAlumnos(int codigoAlumno, String nomArchivo) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        File archivoPpal = new File(nomArchivo);
+        Scanner md = new Scanner(System.in);
+        File archivoPrincipal = new File(nomArchivo);
         FileInputStream fis = new FileInputStream(nomArchivo);
-        File archivoTemp = new File("temporal.dat");
-        FileOutputStream fos = new FileOutputStream(archivoTemp);
+        File archivoTemporal = new File("temporal.dat");
+        FileOutputStream fos = new FileOutputStream(archivoTemporal, true);
         boolean flag = false;
         try (DataInputStream dis = new DataInputStream(fis)) {
             while (true) {
-                dis.readInt();
+                int num = dis.readInt();
                 dis.readUTF();
                 dis.readFloat();
                 try (DataOutputStream dos = new DataOutputStream(fos)) {
-                    if (codigoAlumno == dis.readInt()) {
+                    if (codigoAlumno == num) {
+                        System.out.println("h");
                         dos.writeInt(codigoAlumno);
-                        System.out.println("Nombre: ");
-                        dos.writeUTF(sc.nextLine());
-                        System.out.println("Altura: ");
-                        dos.writeDouble(sc.nextDouble());
+                        System.out.print("Nombre nuevo: ");
+                        dos.writeUTF(md.nextLine());
+                        System.out.print("Altura nueva: ");
+                        dos.writeFloat(md.nextFloat());
                         flag = true;
                     }
                     dos.writeInt(dis.readInt());
                     dos.writeUTF(dis.readUTF());
-                    dos.writeDouble(dis.readDouble());
-
-                } catch (EOFException e) {
-                    System.out.println("Fin archivo");
-                }
-                if (flag) {
-                    if (archivoPpal.delete()) {
-                        archivoTemp.renameTo(archivoPpal);
-                    }
-                } else {
-                    archivoTemp.delete();
+                    dos.writeFloat(dis.readFloat());
                 }
             }
+        } catch (EOFException e) {
+            System.out.println("Fin de archivo");
+        }
+        if (flag) {
+            if (archivoPrincipal.delete()) {
+                archivoTemporal.renameTo(archivoPrincipal);
+            }
+        } else {
+            archivoTemporal.delete();
         }
     }
 
-    public static void eliminarAlumnos(int codigoAlumno, String nomArchivo) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        File archivoPpal = new File(nomArchivo);
-        FileInputStream fis = new FileInputStream(nomArchivo);
-        File archivoTemp = new File("temporal.dat");
-        FileOutputStream fos = new FileOutputStream(archivoTemp);
+    public static void eliminarAlumnos(int codigoAlumno, String nombreArchivo) throws IOException {
+        File archivoPrincipal = new File(nombreArchivo);
+        FileInputStream fis = new FileInputStream(nombreArchivo);
+        File archivoTemporal = new File("temporal.dat");
+        FileOutputStream fos = new FileOutputStream(archivoTemporal, true);
         boolean flag = false;
         try (DataInputStream dis = new DataInputStream(fis)) {
             while (true) {
+                int num = dis.readInt();
+                dis.readUTF();
+                dis.readFloat();
                 try (DataOutputStream dos = new DataOutputStream(fos)) {
-                    if (codigoAlumno != dis.readInt()) {
+
+                    if (codigoAlumno != num) {
+                        System.out.println("entra");
                         dos.writeInt(dis.readInt());
                         dos.writeUTF(dis.readUTF());
-                        dos.writeDouble(dis.readDouble());
+                        dos.writeFloat(dis.readFloat());
                     }
                 }
             }
         } catch (EOFException e) {
-            System.out.println("Fin archivo");
+            System.out.println("Fin de archivo");
         }
-        if (flag) {
-            if (archivoPpal.delete()) {
-                archivoTemp.renameTo(archivoPpal);
-            }
-        } else {
-            archivoTemp.delete();
-        }
+
+        archivoPrincipal.delete();
+        archivoTemporal.renameTo(archivoPrincipal);
+
     }
 
     public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(new File("alumnos.dat"));
+        Scanner sc = new Scanner(System.in);
         ArrayList<Alumno> listaAlumnos = new ArrayList<>();
-        int opcion;
+        int opcion = 0;
         do {
             System.out.println("Elige una opcion");
             System.out.println("1.- Dar de alta alumnos");
@@ -130,6 +123,7 @@ public class Ejercicio9 {
             System.out.println("4.- Borrar alumnos");
             System.out.println("5.- SALIR");
             opcion = sc.nextInt();
+            sc.nextLine();
             switch (opcion) {
                 case 1:
                     // Código opcion 1
@@ -141,11 +135,15 @@ public class Ejercicio9 {
                     break;
                 case 3:
                     // Código opcion 3
-                    modificarAlumnos(7, "alumnos.dat");
+                    System.out.println("Codigo del alumno a modificar:");
+                    int c = sc.nextInt();
+                    modificarAlumnos(c, "alumnos.dat");
                     break;
                 case 4:
                     // Código opcion 4
-                    eliminarAlumnos(7, "alumnos.dat");
+                    System.out.println("Codigo del alumno a eliminar:");
+                    c = sc.nextInt();
+                    eliminarAlumnos(c, "alumnos.dat");
                     break;
                 case 5:
                     // Código opcion 5
@@ -153,6 +151,7 @@ public class Ejercicio9 {
                     break;
                 default:
                     System.out.println("Opcion no valida");
+                    break;
             }
         } while (opcion != 5);
     }

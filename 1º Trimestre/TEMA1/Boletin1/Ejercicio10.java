@@ -133,12 +133,10 @@ public class Ejercicio10 {
                     break;
                 case 2:
                     // Código opcion 2
-                    listaObjetos = consultarArchivo(fichero);
                     System.out.println(listaObjetos);
                     break;
                 case 3:
                     // Código opcion 3
-                    // listaObjetos = consultarArchivo(fichero);
                     System.out.println("Que deseas eliminar persona o departamento? (1/2)");
                     respuesta = sc.nextInt();
                     sc.nextLine();
