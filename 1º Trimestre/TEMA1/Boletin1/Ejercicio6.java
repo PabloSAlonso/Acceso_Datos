@@ -23,7 +23,7 @@ public class Ejercicio6 {
 
     static String[] dividirContenidoArchivos(String contenidoArchivo, int numCaracteres) {
         int longitudTotal = contenidoArchivo.length();
-        int tamañoBuffer = 10;
+        int tamañoBuffer = numCaracteres;
         String[] buffer = new String[tamañoBuffer];
         int inicio = 0;
 
@@ -64,14 +64,14 @@ public class Ejercicio6 {
     }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
+        // int numArchivos = 3;
         int numCaracteres = 50;
-        int numArchivos = 3;
         int numLineas = 2;
 
         escribirArchivo(dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
         numCaracteres));
         
-        escribirArchivo(dividirLineasArchivos("ejemplo.txt", numLineas));
+        // escribirArchivo(dividirLineasArchivos("ejemplo.txt", numLineas));
 
     }
 
