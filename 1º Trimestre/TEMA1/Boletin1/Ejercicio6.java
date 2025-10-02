@@ -62,6 +62,19 @@ public class Ejercicio6 {
         }
         return contenidoArchivo;
     }
+    
+    public static void unirArchivos(String [] ficheros) throws IOException {
+        for (int i = 0; i < ficheros.length; i++) {
+            try (Scanner sc = new Scanner(new File(ficheros[i]))) {
+                while (sc.hasNext()) {
+                    try (FileWriter fw = new FileWriter(new File("archivoUnion.txt"),true)) {
+                        fw.write(sc.nextLine());
+                        fw.write(System.lineSeparator());
+                    }
+                }
+            }
+        }
+    }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // int numArchivos = 3;
@@ -70,7 +83,8 @@ public class Ejercicio6 {
 
         escribirArchivo(dividirContenidoArchivos(leerArchivo("ejemplo.txt"),
         numCaracteres));
-        
+        String[] ficheros = {"ejemplo.txt", "archivo0.txt"};
+        unirArchivos(ficheros);
         // escribirArchivo(dividirLineasArchivos("ejemplo.txt", numLineas));
 
     }
