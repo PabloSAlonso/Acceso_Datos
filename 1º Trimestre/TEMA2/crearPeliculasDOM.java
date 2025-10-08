@@ -70,10 +70,13 @@ public class crearPeliculasDOM {
 
     public static void mostrarPelisConNDirectores(Document doc, int numDirectores){
         Node filmoteca, peliculaNode, tituloDirector;
-        NodeList pelicula, hijosPelicula;
+        NodeList pelicula, hijosPelicula, directores;
         NamedNodeMap atributos;
         filmoteca = doc.getFirstChild();
         pelicula = filmoteca.getChildNodes();
+        if (){
+
+        }
         for (int i = 0; i < pelicula.getLength(); i++) {
             peliculaNode = pelicula.item(i);
             if (peliculaNode.hasAttributes()) {
@@ -86,6 +89,9 @@ public class crearPeliculasDOM {
             }
             if (peliculaNode.getNodeType() == Node.ELEMENT_NODE) {
                 hijosPelicula = peliculaNode.getChildNodes();
+                if (hijosPelicula.item(i).getNodeValue() == "Director"){
+                    
+                }
                 for (int j = 0; j < hijosPelicula.getLength(); j++) {
                     tituloDirector = hijosPelicula.item(j);
                     if (tituloDirector.getNodeType() == Node.ELEMENT_NODE) {
@@ -105,3 +111,4 @@ public class crearPeliculasDOM {
 
     }
 }
+//https://prod.liveshare.vsengsaas.visualstudio.com/join?FBBF76AB40EEE6E784F5D61A49AD0D405542
