@@ -1,3 +1,9 @@
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -6,6 +12,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 
 public class crearPeliculasDOM {
 
@@ -87,12 +97,83 @@ public class crearPeliculasDOM {
         }
     }
 
-    public static void main(String[] args) {
+    public static void diferentesGeneros(Document doc) {
+        Node filmotecaNode, peliculaNode;
+        NodeList pelicula;
+        ArrayList<String> generos = new ArrayList<>();
+        NamedNodeMap atributos;
+        filmotecaNode = doc.getFirstChild();
+        pelicula = filmotecaNode.getChildNodes();
+        for (int i = 0; i < pelicula.getLength(); i++) {
+            if (pelicula.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                peliculaNode = (Element) pelicula.item(i);
+                if (peliculaNode.hasAttributes()) {
+                    atributos = peliculaNode.getAttributes();
+                    for (int j = 0; j < atributos.getLength(); j++) {
+                        if (atributos.item(j).getNodeName() == "genero") {
+                            if (!generos.contains(atributos.item(j).getTextContent())) {
+                                generos.add(atributos.item(j).getTextContent());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < generos.size(); i++) {
+            System.out.println(generos.get(i));
+        }
+        System.out.printf("Nº DE GENEROS DIFRENTES %d", generos.size());
+    }
+
+    // Dado o título dunha película engádalle, se non existe, un atributo pasado
+    // como parámetro.
+    // Ø Dado o título dunha película e un atributo, se existe elimíneo.
+
+    public static void añadirAtributo(Document doc, String tituloPelicula, String atributo) {
+        NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
+        NamedNodeMap atributosDePelicula;
+        Element pelicula;
+        for (int i = 0; i < peliculaPorTitulo.getLength(); i++) {
+            atributosDePelicula = peliculaPorTitulo.item(i).getAttributes();
+            for (int j = 0; j < atributosDePelicula.getLength(); j++) {
+                if (!atributosDePelicula.item(j).getNodeName().equals(atributo)) {
+                    pelicula = (Element) peliculaPorTitulo.item(i);
+                    pelicula.setAttribute(atributo, "DIEGO COSTA");
+                }
+            }
+        }
+    }
+
+    public static void grabarDOM(Document document, String ficheroSalida)
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, FileNotFoundException {
+        DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+        DOMImplementationLS ls = (DOMImplementationLS) registry.getDOMImplementation("XML 3.0 LS 3.0");
+        // Se crea un destino vacio
+        LSOutput output = ls.createLSOutput();
+        output.setEncoding("UTF-8");
+        // Se establece el flujo de salida
+        output.setByteStream(new FileOutputStream(ficheroSalida));
+        // output.setByteStream(System.out);
+        // Permite escribir un documento DOM en XML
+        LSSerializer serializer = ls.createLSSerializer();
+        // Se establecen las propiedades del serializador
+        serializer.setNewLine("\r\n");
+        ;
+        serializer.getDomConfig().setParameter("format-pretty-print", true);
+        // Se escribe el documento ya sea en un fichero o en una cadena de texto
+        serializer.write(document, output);
+        // String xmlCad=serializer.writeToString(document);
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException {
         String ruta = "peliculas.xml";
         Document doc = creaArbol(ruta);
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
-        contarDirectores(doc, 1);;
+        // contarDirectores(doc, 1);
+        añadirAtributo(doc, "El señor de los anillos", "diegocostaMARICON");
+        grabarDOM(doc, ruta);
 
     }
 }
