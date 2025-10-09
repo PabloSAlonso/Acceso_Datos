@@ -2,6 +2,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -68,33 +69,22 @@ public class crearPeliculasDOM {
         }
     }
 
-    public static void mostrarPelisConNDirectores(Document doc, int numDirectores) {
-        Node filmoteca, peliculaNode, tituloDirector;
-        NodeList pelicula, hijosPelicula, directores;
-        NamedNodeMap atributos;
-        filmoteca = doc.getFirstChild();
-        pelicula = filmoteca.getChildNodes();
-        int contadorDeDirectores = 0; ///
-
-        for (int i = 0; i < pelicula.getLength(); i++) { // Si pelicula[i] tiene dos o mas directores no muestra
-            peliculaNode = pelicula.item(i);
-            if (peliculaNode.getNodeType() == Node.ELEMENT_NODE) {
-                hijosPelicula = peliculaNode.getChildNodes();
-                for (int j = 0; j < hijosPelicula.getLength(); j++) {
-                    while (hijosPelicula.item(j).getNodeName().equals("director")) { // este qhile quitalo que es una mierda
-                        contadorDeDirectores++;
-                        if (contadorDeDirectores < numDirectores) {
-                            tituloDirector = hijosPelicula.item(j);
-                            if (tituloDirector.getNodeType() == Node.ELEMENT_NODE) {
-                                System.out.println(
-                                        tituloDirector.getNodeName() + " - " + tituloDirector.getTextContent());
-                            }
-                        }
-                    }
+    public static void contarDirectores(Document doc, int n) {
+        Node filmotecaNode;
+        Element peliculaNode;
+        NodeList pelicula, directores, titulos;
+        filmotecaNode = doc.getFirstChild();
+        pelicula = filmotecaNode.getChildNodes();
+        for (int i = 0; i < pelicula.getLength(); i++) {
+            if (pelicula.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                peliculaNode = (Element) pelicula.item(i);
+                directores = peliculaNode.getElementsByTagName("director");
+                titulos = peliculaNode.getElementsByTagName("titulo");
+                if (directores.getLength() > n) {
+                    System.out.printf("%S: %s\n", titulos.item(0).getNodeName(), titulos.item(0).getTextContent());
                 }
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -102,8 +92,7 @@ public class crearPeliculasDOM {
         Document doc = creaArbol(ruta);
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
-        mostrarPelisConNDirectores(doc, 2);
+        contarDirectores(doc, 1);;
 
     }
 }
-// https://prod.liveshare.vsengsaas.visualstudio.com/join?25C8C09B654471D4E027496AC08B8159ADC9
