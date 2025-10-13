@@ -129,22 +129,6 @@ public class crearPeliculasDOM {
     // como parámetro.
     // Ø Dado o título dunha película e un atributo, se existe elimíneo.
 
-    // public static void añadirAtributo(Document doc, String tituloPelicula, String
-    // atributo) {
-    // NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
-    // NamedNodeMap atributosDePelicula;
-    // Element pelicula;
-    // for (int i = 0; i < peliculaPorTitulo.getLength(); i++) {
-    // atributosDePelicula = peliculaPorTitulo.item(i).getAttributes();
-    // for (int j = 0; j < atributosDePelicula.getLength(); j++) {
-    // if (!atributosDePelicula.item(j).getNodeName().equals(atributo)) {
-    // pelicula = (Element) peliculaPorTitulo.item(i);
-    // pelicula.setAttribute(atributo, "DIEGO COSTA");
-    // }
-    // }
-    // }
-    // }
-
     public static void añadirAtributo(Document doc, String tituloPelicula, String atributo) {
         NodeList peliculas = doc.getElementsByTagName("pelicula");
         for (int i = 0; i < peliculas.getLength(); i++) {
@@ -223,25 +207,40 @@ public class crearPeliculasDOM {
 
     // 9. Larry Wachowski cambiou o seu nome por Lana. Modifica a árbore e
     // almacénao.
-    public static void wachowski(Document doc) {
+    public static void wachowski(Document doc, String nomInicial, String nomFinal, String apellido) {
         NodeList directores = doc.getElementsByTagName("director");
         for (int i = 0; i < directores.getLength(); i++) {
             Node director = directores.item(i);
             if (director.getFirstChild().getNodeType() != Node.ELEMENT_NODE) {
-                Node nombre = director.getFirstChild().getNextSibling();
+                Node nom = director.getFirstChild().getNextSibling();
+                NodeList ape = doc.getElementsByTagName("apellido");
+                for (int j = 0; j < ape.getLength(); j++) {
+                    if (ape.item(j).getTextContent().equals(apellido) && nom.getTextContent().equals(nomInicial)) {
+                        nom.setTextContent(nomFinal);
+                    }
+                }
             }
         }
     }
 
-    public static void modificarDirector(Document doc, String nombreViejo, String nombreNuevo) {
-        NodeList directores = doc.getElementsByTagName("director");
-        for (int i = 0; i < directores.getLength(); i++) {
-            Node director = directores.item(i);
-            if (director.getTextContent().equalsIgnoreCase(nombreViejo)) {
-                director.setTextContent(nombreNuevo);
-                System.out.println("Director modificado");
+    // 10. Decatámonos que Alfredo Landa axudo a David Lynch a dirixir Dune. Engádeo
+    // como director e almacena esta modificación en nova árbore.
+
+    public static void añadirAlfredo(Document doc, String nomDirector, String añadirDirector, String tituloPeli) {
+        NodeList peliculas = doc.getElementsByTagName("pelicula");
+        for (int i = 0; i < peliculas.getLength(); i++) {
+            Node titulo = peliculas.item(i).getFirstChild().getNextSibling();
+            if(titulo.getFirstChild().getNodeType() == Node.ELEMENT_NODE && titulo.getTextContent().equals(tituloPeli)){
+                System.out.println(titulo.getTextContent());
+                Element pelicula = (Element) titulo.getParentNode();
+                Element nuevoDirector = doc.createElement(añadirDirector);
+                pelicula.appendChild(nuevoDirector);
+                pelicula.appendChild(doc.createTextNode(""));
+                Element nomDir = doc.createElement("nombre");
+                nomDir.appendChild(doc.createTextNode(añadirDirector));
             }
         }
+
     }
 
     public static void main(String[] args)
@@ -252,7 +251,9 @@ public class crearPeliculasDOM {
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
         // añadirAtributo(doc, "El Señor de los Anillos", "nom Atributo");
-        añadirPelicula(doc, "Depredador", "Jhon", "Tiernan", "1987", "acción", "vo");
+        // añadirPelicula(doc, "Depredador", "Jhon", "Tiernan", "1987", "acción", "vo");
+        // wachowski(doc, "Larry", "Lana", "Wachowski");
+        añadirAlfredo(doc, "David", "Alfredo");
         grabarDOM(doc, ruta);
 
     }
