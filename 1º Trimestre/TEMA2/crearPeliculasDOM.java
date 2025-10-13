@@ -129,32 +129,42 @@ public class crearPeliculasDOM {
     // como parámetro.
     // Ø Dado o título dunha película e un atributo, se existe elimíneo.
 
+    // public static void añadirAtributo(Document doc, String tituloPelicula, String
+    // atributo) {
+    // NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
+    // NamedNodeMap atributosDePelicula;
+    // Element pelicula;
+    // for (int i = 0; i < peliculaPorTitulo.getLength(); i++) {
+    // atributosDePelicula = peliculaPorTitulo.item(i).getAttributes();
+    // for (int j = 0; j < atributosDePelicula.getLength(); j++) {
+    // if (!atributosDePelicula.item(j).getNodeName().equals(atributo)) {
+    // pelicula = (Element) peliculaPorTitulo.item(i);
+    // pelicula.setAttribute(atributo, "DIEGO COSTA");
+    // }
+    // }
+    // }
+    // }
+
     public static void añadirAtributo(Document doc, String tituloPelicula, String atributo) {
-        NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
-        NamedNodeMap atributosDePelicula;
-        Element pelicula;
-        for (int i = 0; i < peliculaPorTitulo.getLength(); i++) {
-            atributosDePelicula = peliculaPorTitulo.item(i).getAttributes();
-            for (int j = 0; j < atributosDePelicula.getLength(); j++) {
-                if (!atributosDePelicula.item(j).getNodeName().equals(atributo)) {
-                    pelicula = (Element) peliculaPorTitulo.item(i);
-                    pelicula.setAttribute(atributo, "DIEGO COSTA");
-                }
+        NodeList peliculas = doc.getElementsByTagName("pelicula");
+        for (int i = 0; i < peliculas.getLength(); i++) {
+            Element pelicula = (Element) peliculas.item(i);
+            String titulo = pelicula.getElementsByTagName("titulo").item(0).getTextContent();
+            if (titulo.equalsIgnoreCase(tituloPelicula) && !pelicula.hasAttribute(atributo)) {
+                pelicula.setAttribute("version", atributo);
+                System.out.println("Atributo añadido");
             }
         }
     }
 
-    public static void quitarAtributo(Document doc, String tituloPelicula, String atributo){
-        NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
-        NamedNodeMap atributosDePelicula;
-        Element pelicula;
-        for (int i = 0; i < peliculaPorTitulo.getLength(); i++) {
-            atributosDePelicula = peliculaPorTitulo.item(i).getAttributes();
-            for (int j = 0; j < atributosDePelicula.getLength(); j++) {
-                if (atributosDePelicula.item(j).getNodeName().equals(atributo)) {
-                    pelicula = (Element) peliculaPorTitulo.item(i);
-                    pelicula.setAttribute(atributo, "DIEGO COSTA");
-                }
+    public static void eliminarAtributo(Document doc, String tituloPelicula, String atributo) {
+        NodeList peliculas = doc.getElementsByTagName("pelicula");
+        for (int i = 0; i < peliculas.getLength(); i++) {
+            Element pelicula = (Element) peliculas.item(i);
+            String titulo = pelicula.getElementsByTagName("titulo").item(0).getTextContent();
+            if (titulo.equalsIgnoreCase(tituloPelicula) && pelicula.hasAttribute(atributo)) {
+                pelicula.removeAttribute(atributo);
+                System.out.println(atributo + "eliminado");
             }
         }
     }
@@ -181,17 +191,42 @@ public class crearPeliculasDOM {
         // String xmlCad=serializer.writeToString(document);
     }
 
-    // Ejercicio 8
+    // 8. Engade a seguinte película "Depredador" dirixida en 1987 por John Tiernan
+    // dentro do xénero acción. Esta en versión orixinal. Almacena esta árbore nun
+    // ficheiro XML.
+    public static void añadirPelicula(Document doc, String nombre, String director, String año, String tipo) {
+        Element nodoPelicula = doc.createElement("pelicula");
+        nodoPelicula.setAttribute("genero", tipo);
+        nodoPelicula.appendChild(doc.createTextNode("\n"));
 
-    
+        Element nodoTitulo = doc.createElement("titulo");
+        nodoTitulo.appendChild(doc.createTextNode(nombre));
+        nodoPelicula.appendChild(nodoTitulo);
+        nodoPelicula.appendChild(doc.createTextNode("\n"));
 
-    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException {
-        String ruta = "C:\\Users\\Pablo Santana\\Desktop\\Acceso_Datos_Repo\\1º Trimestre\\TEMA2\\peliculas.xml";
+        Element nodoDirector = doc.createElement("director");
+        nodoDirector.appendChild(doc.createTextNode(director));
+        nodoPelicula.appendChild(nodoDirector);
+        nodoPelicula.appendChild(doc.createTextNode("\n"));
+
+        Element nodoEstreno = doc.createElement("estreno");
+        nodoEstreno.appendChild(doc.createTextNode(año));
+        nodoPelicula.appendChild(nodoEstreno);
+        nodoPelicula.appendChild(doc.createTextNode("\n"));
+
+        Node raiz = doc.getFirstChild();
+        raiz.appendChild(nodoPelicula);
+        raiz.appendChild(doc.createTextNode("\n"));
+    }
+
+    public static void main(String[] args)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException {
+        String ruta = "peliculas.xml";
         Document doc = creaArbol(ruta);
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
-        añadirAtributo(doc, "El señor de los anillos", "atributo");
+        añadirAtributo(doc, "El Señor de los Anillos", "nom Atributo");
         grabarDOM(doc, ruta);
         // https://prod.liveshare.vsengsaas.visualstudio.com/join?1F500D813F85DB24BDE7DCF5502F88BC2257
     }
