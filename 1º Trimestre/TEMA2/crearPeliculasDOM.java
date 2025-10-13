@@ -143,6 +143,7 @@ public class crearPeliculasDOM {
             }
         }
     }
+
     public static void quitarAtributo(Document doc, String tituloPelicula, String atributo){
         NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
         NamedNodeMap atributosDePelicula;
@@ -180,15 +181,18 @@ public class crearPeliculasDOM {
         // String xmlCad=serializer.writeToString(document);
     }
 
+    // Ejercicio 8
+
+    
+
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException {
-        String ruta = "peliculas.xml";
+        String ruta = "C:\\Users\\Pablo Santana\\Desktop\\Acceso_Datos_Repo\\1º Trimestre\\TEMA2\\peliculas.xml";
         Document doc = creaArbol(ruta);
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
-        añadirAtributo(doc, "El señor de los anillos", "diegocostaMARICON");
+        añadirAtributo(doc, "El señor de los anillos", "atributo");
         grabarDOM(doc, ruta);
-
+        // https://prod.liveshare.vsengsaas.visualstudio.com/join?1F500D813F85DB24BDE7DCF5502F88BC2257
     }
 }
-https://prod.liveshare.vsengsaas.visualstudio.com/join?43E5FB08451E99D7B71A5F152B506E1E013F
