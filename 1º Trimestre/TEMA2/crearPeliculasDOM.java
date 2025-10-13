@@ -194,9 +194,13 @@ public class crearPeliculasDOM {
     // 8. Engade a seguinte película "Depredador" dirixida en 1987 por John Tiernan
     // dentro do xénero acción. Esta en versión orixinal. Almacena esta árbore nun
     // ficheiro XML.
-    public static void añadirPelicula(Document doc, String nombre, String director, String año, String tipo) {
+    public static void añadirPelicula(Document doc, String nombre, String directorNombre, String directorApellido,
+            String año, String tipo,
+            String idioma) {
         Element nodoPelicula = doc.createElement("pelicula");
         nodoPelicula.setAttribute("genero", tipo);
+        nodoPelicula.setAttribute("año", año);
+        nodoPelicula.setAttribute("idioma", idioma);
         nodoPelicula.appendChild(doc.createTextNode("\n"));
 
         Element nodoTitulo = doc.createElement("titulo");
@@ -205,18 +209,39 @@ public class crearPeliculasDOM {
         nodoPelicula.appendChild(doc.createTextNode("\n"));
 
         Element nodoDirector = doc.createElement("director");
-        nodoDirector.appendChild(doc.createTextNode(director));
+        Node nomTexto = nodoDirector.appendChild(doc.createElement("nombre"));
+        nomTexto.appendChild(doc.createTextNode(directorNombre));
+        Node apeTexto = nodoDirector.appendChild(doc.createElement("apellido"));
+        apeTexto.appendChild(doc.createTextNode(directorApellido));
         nodoPelicula.appendChild(nodoDirector);
-        nodoPelicula.appendChild(doc.createTextNode("\n"));
-
-        Element nodoEstreno = doc.createElement("estreno");
-        nodoEstreno.appendChild(doc.createTextNode(año));
-        nodoPelicula.appendChild(nodoEstreno);
         nodoPelicula.appendChild(doc.createTextNode("\n"));
 
         Node raiz = doc.getFirstChild();
         raiz.appendChild(nodoPelicula);
         raiz.appendChild(doc.createTextNode("\n"));
+    }
+
+    // 9. Larry Wachowski cambiou o seu nome por Lana. Modifica a árbore e
+    // almacénao.
+    public static void wachowski(Document doc) {
+        NodeList directores = doc.getElementsByTagName("director");
+        for (int i = 0; i < directores.getLength(); i++) {
+            Node director = directores.item(i);
+            if (director.getFirstChild().getNodeType() != Node.ELEMENT_NODE) {
+                Node nombre = director.getFirstChild().getNextSibling();
+            }
+        }
+    }
+
+    public static void modificarDirector(Document doc, String nombreViejo, String nombreNuevo) {
+        NodeList directores = doc.getElementsByTagName("director");
+        for (int i = 0; i < directores.getLength(); i++) {
+            Node director = directores.item(i);
+            if (director.getTextContent().equalsIgnoreCase(nombreViejo)) {
+                director.setTextContent(nombreNuevo);
+                System.out.println("Director modificado");
+            }
+        }
     }
 
     public static void main(String[] args)
@@ -226,8 +251,10 @@ public class crearPeliculasDOM {
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
-        añadirAtributo(doc, "El Señor de los Anillos", "nom Atributo");
+        // añadirAtributo(doc, "El Señor de los Anillos", "nom Atributo");
+        añadirPelicula(doc, "Depredador", "Jhon", "Tiernan", "1987", "acción", "vo");
         grabarDOM(doc, ruta);
-        // https://prod.liveshare.vsengsaas.visualstudio.com/join?1F500D813F85DB24BDE7DCF5502F88BC2257
+
     }
+    // https://prod.liveshare.vsengsaas.visualstudio.com/join?532D038200169E890BD9FA0C2FE98658E4CC
 }

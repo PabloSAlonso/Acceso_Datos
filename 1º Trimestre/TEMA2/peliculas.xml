@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><filmoteca>
-    <pelicula año="1984" genero="Ciencia Ficción" idioma="es" >
+    <pelicula año="1984" genero="Ciencia Ficción" idioma="es">
         <titulo>Dune</titulo>
         <director>
             <nombre>David</nombre>
             <apellido>Lynch</apellido>
         </director>
     </pelicula>
-    <pelicula año="2001" genero="Fantasia" idioma="es" >
+    <pelicula año="2001" genero="Fantasia" idioma="es" version="nom Atributo">
         <titulo>El Señor de los Anillos</titulo>
         <director>
             <nombre>Peter</nombre>
@@ -24,14 +24,14 @@
             <apellido>Wachowski</apellido>
         </director>
     </pelicula>
-    <pelicula año="1992" genero="Ciencia Ficción" idioma="en" >
+    <pelicula año="1992" genero="Ciencia Ficción" idioma="en">
         <titulo>Blade Runner</titulo>
         <director>
             <nombre>Ridley</nombre>
             <apellido>Scott</apellido>
         </director>
     </pelicula>
-    <pelicula año="1996" genero="Thriller" idioma="en" >
+    <pelicula año="1996" genero="Thriller" idioma="en">
         <titulo>Fargo</titulo>
         <director>
             <nombre>Joel</nombre>
@@ -42,11 +42,18 @@
             <apellido>Coen</apellido>
         </director>
     </pelicula>
-    <pelicula año="1979" genero="Ciencia Ficción" idioma="en" >
+    <pelicula año="1979" genero="Ciencia Ficción" idioma="en">
         <titulo>Alien</titulo>
         <director>
             <nombre>Ridley</nombre>
             <apellido>Scott</apellido>
+        </director>
+    </pelicula>
+    <pelicula año="1987" genero="acción" idioma="vo">
+        <titulo>Depredador</titulo>
+        <director>
+            <nombre>Jhon</nombre>
+            <apellido>Tiernan</apellido>
         </director>
     </pelicula>
 </filmoteca>
