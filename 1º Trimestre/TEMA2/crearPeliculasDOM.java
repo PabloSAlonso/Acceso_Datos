@@ -143,6 +143,20 @@ public class crearPeliculasDOM {
             }
         }
     }
+    public static void quitarAtributo(Document doc, String tituloPelicula, String atributo){
+        NodeList peliculaPorTitulo = doc.getElementsByTagName("pelicula");
+        NamedNodeMap atributosDePelicula;
+        Element pelicula;
+        for (int i = 0; i < peliculaPorTitulo.getLength(); i++) {
+            atributosDePelicula = peliculaPorTitulo.item(i).getAttributes();
+            for (int j = 0; j < atributosDePelicula.getLength(); j++) {
+                if (atributosDePelicula.item(j).getNodeName().equals(atributo)) {
+                    pelicula = (Element) peliculaPorTitulo.item(i);
+                    pelicula.setAttribute(atributo, "DIEGO COSTA");
+                }
+            }
+        }
+    }
 
     public static void grabarDOM(Document document, String ficheroSalida)
             throws ClassNotFoundException, InstantiationException,
@@ -176,5 +190,5 @@ public class crearPeliculasDOM {
         grabarDOM(doc, ruta);
 
     }
-    https://prod.liveshare.vsengsaas.visualstudio.com/join?43E5FB08451E99D7B71A5F152B506E1E013F
 }
+https://prod.liveshare.vsengsaas.visualstudio.com/join?43E5FB08451E99D7B71A5F152B506E1E013F
