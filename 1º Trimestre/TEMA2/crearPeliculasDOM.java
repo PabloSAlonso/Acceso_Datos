@@ -1,4 +1,5 @@
 import java.io.FileOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -225,36 +226,82 @@ public class crearPeliculasDOM {
 
     // 10. Decatámonos que Alfredo Landa axudo a David Lynch a dirixir Dune. Engádeo
     // como director e almacena esta modificación en nova árbore.
-
-    public static void añadirAlfredo(Document doc, String nomDirector, String añadirDirector, String tituloPeli) {
+    public static void añadirAlfredo(Document doc, String nomDirector, String apeDirector, String tituloPeli) {
         NodeList peliculas = doc.getElementsByTagName("pelicula");
         for (int i = 0; i < peliculas.getLength(); i++) {
             Node titulo = peliculas.item(i).getFirstChild().getNextSibling();
-            if(titulo.getFirstChild().getNodeType() == Node.ELEMENT_NODE && titulo.getTextContent().equals(tituloPeli)){
+            if (titulo.getFirstChild().getNodeType() != Node.ELEMENT_NODE
+                    && titulo.getTextContent().equals(tituloPeli)) {
                 System.out.println(titulo.getTextContent());
-                Element pelicula = (Element) titulo.getParentNode();
-                Element nuevoDirector = doc.createElement(añadirDirector);
+                Element pelicula = (Element) titulo.getParentNode(); // <director>
+                Element nuevoDirector = doc.createElement("director"); // <direcotr>
                 pelicula.appendChild(nuevoDirector);
                 pelicula.appendChild(doc.createTextNode(""));
-                Element nomDir = doc.createElement("nombre");
-                nomDir.appendChild(doc.createTextNode(añadirDirector));
+
+                Element nodoNom = (Element) nuevoDirector.appendChild(doc.createElement("nombre"));
+                nodoNom.appendChild(doc.createTextNode(nomDirector));
+                nodoNom.appendChild(doc.createTextNode(""));
+
+                Element nodoApe = (Element) nuevoDirector.appendChild(doc.createElement("apellido"));
+                nodoApe.appendChild(doc.createTextNode(apeDirector));
+                nodoApe.appendChild(doc.createTextNode(""));
             }
         }
+    }
+
+    // 11. Crea un método que permita borrar películas polo seu título.
+    public static void deleteFilmFromTitle(Document doc, String filmNameToDelete) {
+        NodeList peliculas = doc.getElementsByTagName("pelicula");
+        for (int i = 0; i < peliculas.getLength(); i++) {
+            Element pelicula = (Element) peliculas.item(i);
+            String titulo = pelicula.getElementsByTagName("titulo").item(0).getTextContent(); // FIX
+            if (titulo.equals(filmNameToDelete)) {
+                pelicula.getParentNode().removeChild(pelicula);
+            }
+        }
+    }
+
+    // 12. Crea un novo documento XML replicando o seguinte:
+    // <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+    // <compañia>
+    // <empregado id="1">
+    // <nome>Juan</nome>
+    // <apelidos>López Pérez</apelidos>
+    // <alcume>Juanín</alcume >
+    // <salario>1000</salario>
+    // </ empregado >
+    // </compañia>
+
+    public static void crearCompañia(Document doc, String nomDoc) {
+
+        Element compañia = doc.createElement("compañia");
+        doc.appendChild(compañia);
+        Element empleado = doc.createElement("empleado");
+        compañia.appendChild(empleado);
+        compañia.appendChild(doc.createTextNode(""));
+        Element nombre = doc.createElement("nombre");
+        empleado.appendChild(nombre);
+        empleado.appendChild(doc.createTextNode(""));
 
     }
 
     public static void main(String[] args)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException {
         String ruta = "peliculas.xml";
+        String ruta2 = "compañia.xml";
         Document doc = creaArbol(ruta);
+        // Document doc2 = creaArbol(ruta2);
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
         // añadirAtributo(doc, "El Señor de los Anillos", "nom Atributo");
         // añadirPelicula(doc, "Depredador", "Jhon", "Tiernan", "1987", "acción", "vo");
         // wachowski(doc, "Larry", "Lana", "Wachowski");
-        añadirAlfredo(doc, "David", "Alfredo");
-        grabarDOM(doc, ruta);
+        // añadirAlfredo(doc, "Alfredo", "Landa", "Dune");
+        deleteFilmFromTitle(doc, "Dune");
+        // // crearCompañia(doc2, ruta2);
+        grabarDOM(doc, ruta); 
+        // grabarDOM(doc2, ruta2);
 
     }
     // https://prod.liveshare.vsengsaas.visualstudio.com/join?577082D3C7E17AB56C2597611F88E6993140
