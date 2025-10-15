@@ -1,4 +1,5 @@
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +19,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.SAXException;
 
 public class crearPeliculasDOM {
 
@@ -272,25 +275,33 @@ public class crearPeliculasDOM {
     // </ empregado >
     // </compañia>
 
-    public static void crearCompañia(Document doc, String nomDoc) {
-
+    public static void crearCompañia(Document doc, String nomDoc) { // TODO
         Element compañia = doc.createElement("compañia");
         doc.appendChild(compañia);
         Element empleado = doc.createElement("empleado");
+        empleado.setAttribute("id", "0"); // Parameter
         compañia.appendChild(empleado);
         compañia.appendChild(doc.createTextNode(""));
         Element nombre = doc.createElement("nombre");
         empleado.appendChild(nombre);
+        nombre.appendChild(doc.createTextNode("CARLOS ALBERTO"));
+        Element apellidos = doc.createElement("apellidos");
+        empleado.appendChild(apellidos);
+        apellidos.appendChild(doc.createTextNode("ITALIANI DA SOUSA"));
+        Element alcume = doc.createElement("alcume");
+        empleado.appendChild(alcume);
+        alcume.appendChild(doc.createTextNode("MALEANTE"));
+        Element salario = doc.createElement("salario");
+        empleado.appendChild(salario);
+        salario.appendChild(doc.createTextNode("ME DEVOLVIERON 8 EUROS"));
         empleado.appendChild(doc.createTextNode(""));
-
     }
 
     public static void main(String[] args)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException {
-        String ruta = "peliculas.xml";
-        String ruta2 = "compañia.xml";
-        Document doc = creaArbol(ruta);
-        // Document doc2 = creaArbol(ruta2);
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException,
+            SAXException, IOException {
+        // String ruta = "peliculas.xml";
+        // Document doc = creaArbol(ruta);
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
@@ -298,10 +309,18 @@ public class crearPeliculasDOM {
         // añadirPelicula(doc, "Depredador", "Jhon", "Tiernan", "1987", "acción", "vo");
         // wachowski(doc, "Larry", "Lana", "Wachowski");
         // añadirAlfredo(doc, "Alfredo", "Landa", "Dune");
-        deleteFilmFromTitle(doc, "Dune");
-        // // crearCompañia(doc2, ruta2);
-        grabarDOM(doc, ruta); 
-        // grabarDOM(doc2, ruta2);
+        // deleteFilmFromTitle(doc, "Dune");
+        // grabarDOM(doc, ruta);
+        String ruta2 = "compañia.xml";
+        Document doc2 = creaArbol(ruta2);
+        if (doc2 == null) {
+            DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+            factoria.setIgnoringComments(true);
+            DocumentBuilder builder = factoria.newDocumentBuilder();
+            doc2 = builder.newDocument();
+        }
+        crearCompañia(doc2, ruta2);
+        grabarDOM(doc2, ruta2);
 
     }
     // https://prod.liveshare.vsengsaas.visualstudio.com/join?6959653447824FFA42F45799DDF9FC0B779C
