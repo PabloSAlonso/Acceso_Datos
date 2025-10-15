@@ -152,7 +152,7 @@ public class crearPeliculasDOM {
             String titulo = pelicula.getElementsByTagName("titulo").item(0).getTextContent();
             if (titulo.equalsIgnoreCase(tituloPelicula) && pelicula.hasAttribute(atributo)) {
                 pelicula.removeAttribute(atributo);
-                System.out.println(atributo + "eliminado");
+                System.out.println(atributo + " eliminado");
             }
         }
     }
@@ -305,7 +305,7 @@ public class crearPeliculasDOM {
         // mostrarTitulos(doc);
         // mostrarPeliculas(doc);
         // contarDirectores(doc, 1);
-        // añadirAtributo(doc, "El Señor de los Anillos", "nom Atributo");
+        // eliminarAtributo(doc, "El Señor de los Anillos", "version");
         // añadirPelicula(doc, "Depredador", "Jhon", "Tiernan", "1987", "acción", "vo");
         // wachowski(doc, "Larry", "Lana", "Wachowski");
         // añadirAlfredo(doc, "Alfredo", "Landa", "Dune");
