@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "getSaxBoletin",
+            "request": "launch",
+            "mainClass": "getSaxBoletin",
+            "projectName": "TEMA2_280530a5"
+        },
+        {
+            "type": "java",
             "name": "getSax",
             "request": "launch",
             "mainClass": "getSax",

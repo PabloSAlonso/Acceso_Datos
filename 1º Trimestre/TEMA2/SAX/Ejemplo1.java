@@ -2,7 +2,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class Ejemplo1 extends DefaultHandler {
+public class Ejemplo1 extends DefaultHandler { //En el getSax llamas a esta clase q creas tu, los overrides se meten con la bombilla al ponerte en esta lineaa/ Override Implement / metes los q se piden
+    
     String etiqueta;
     boolean flag = false;
     @Override
