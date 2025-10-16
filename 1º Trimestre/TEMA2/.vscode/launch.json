@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "getSax",
+            "request": "launch",
+            "mainClass": "getSax",
+            "projectName": "TEMA2_280530a5"
+        },
+        {
+            "type": "java",
             "name": "crearPeliculasDOM",
             "request": "launch",
             "mainClass": "crearPeliculasDOM",
