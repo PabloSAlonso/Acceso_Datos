@@ -2,17 +2,17 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class Ejemplo1 extends DefaultHandler { //En el getSax llamas a esta clase q creas tu, los overrides se meten con la bombilla al ponerte en esta lineaa/ Override Implement / metes los q se piden
-    
-    String etiqueta;
+public class BoletinSAX3 extends DefaultHandler{
     boolean flag = false;
+    String titulo = "";
+    int cont = 0;
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // TODO Auto-generated method stub
         super.characters(ch, start, length);
-        String cadena = new String(ch, start, length);
-        if (flag){
-            System.out.println(cadena);
+        titulo = new String(ch, start, length);
+        if (flag) {
+            System.out.print(titulo);
             flag = false;
         }
     }
@@ -27,27 +27,41 @@ public class Ejemplo1 extends DefaultHandler { //En el getSax llamas a esta clas
     public void endElement(String uri, String localName, String qName) throws SAXException {
         // TODO Auto-generated method stub
         super.endElement(uri, localName, qName);
+        if (qName == "pelicula"){
+            cont = 0;
+        }
     }
 
     @Override
     public void startDocument() throws SAXException {
         // TODO Auto-generated method stub
         super.startDocument();
+        System.out.println("EJERCICIO 14");
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // TODO Auto-generated method stub
         super.startElement(uri, localName, qName, attributes);
-        etiqueta = qName;
-        if (etiqueta.equals("Título")){
-            flag = true;
-        }
-        if (etiqueta.equals("Película")) {
+        if (qName.equals("filmoteca")) {
+            System.out.printf("<%s>\n", qName);
+        } else if (qName.equals("pelicula") ) {
+            System.out.printf("\t<%s ", qName);
             for (int i = 0; i < attributes.getLength(); i++) {
-                System.out.println(attributes.getLocalName(i) + " - " + attributes.getValue(i));
+                System.out.print(attributes.getLocalName(i) + " - " + attributes.getValue(i));
             }
+            System.out.println(">");
+        } else if (qName.equals("titulo")) {
+            flag = true;
+            System.out.printf("\t\t<%s> ", qName);
+        } else if (qName.equals("director")) {
+            System.out.printf("\t<%s>\n", qName);
+        } else if (qName.equals("nombre")) {
+            flag = true;
+            System.out.printf("\t\t\t<%s> ", qName);
+        } else if (qName.equals("apellido")) {
+            flag = true;
+            System.out.printf("\t\t\t<%s> ", qName);
         }
     }
-
 }

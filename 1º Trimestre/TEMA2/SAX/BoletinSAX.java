@@ -48,6 +48,7 @@ public class BoletinSAX extends DefaultHandler {
     public void startDocument() throws SAXException {
         // TODO Auto-generated method stub
         super.startDocument();
+        System.out.println("EJERCICIO 14");
     }
 
     @Override

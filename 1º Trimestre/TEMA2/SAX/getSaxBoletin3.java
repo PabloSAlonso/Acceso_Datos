@@ -6,11 +6,11 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
-public class getSaxBoletin {
+public class getSaxBoletin3 {
     public static void getSax(String entradaXML) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
-        BoletinSAX parserSax = new BoletinSAX();
+        BoletinSAX3 parserSax = new BoletinSAX3();
         parser.parse(entradaXML, parserSax);
     }
 
