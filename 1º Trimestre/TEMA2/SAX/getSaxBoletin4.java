@@ -10,7 +10,7 @@ public class getSaxBoletin4 {
     public static void getSax(String entradaXML) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
-        BoletinSAX3 parserSax = new BoletinSAX3();
+        BoletinSAX4 parserSax = new BoletinSAX4 ();
         parser.parse(entradaXML, parserSax);
     }
 
