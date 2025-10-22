@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.29">
+<file name="C:\Users\Pablo Santana\Desktop\Acceso_Datos_Repo\1º Trimestre\TEMA3\json\src\main\java\ejemplo1\Application.java">
+<error line="27" column="9" severity="warning" message="Package name &apos;ejemplo1&apos; must match pattern &apos;^[a-z]+(\.[a-z][a-z0-9]*)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.PackageNameCheck"/>
+</file>
+</checkstyle>
