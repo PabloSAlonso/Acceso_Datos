@@ -26,15 +26,20 @@
 
 package ejemplo1;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+import javax.json.JsonWriter;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Application {
@@ -87,7 +92,82 @@ public class Application {
     }
   }
 
-  public static void main(String[] args) {
-    leeJSON("https://pokeapi.co/");
+  public static void escribeJSON(JsonValue json, File f) throws FileNotFoundException {
+    System.out.println("Guardando tipo: " + json.getValueType());
+    PrintWriter pw = new PrintWriter(f);
+    JsonWriter writer = Json.createWriter(pw);
+    // writer.write((JsonStructure) json);
+    if (json.getValueType() == JsonValue.ValueType.OBJECT) {
+      writer.writeObject(json.asJsonObject());
+      // writer.writeObject((JsonObject)json);
+    } else if (json.getValueType() == JsonValue.ValueType.ARRAY) {
+      writer.writeArray(json.asJsonArray());
+      // writer.writeArray((JsonArray)json);
+    } else
+      System.out.println("No se soporta la escritura");
+    writer.close();
+  }
+
+  public static void navegarPelis() {
+    // JsonValue j = (JsonArray) leeJSON("src\\main\\java\\resources\\pelis.json");
+    // // System.out.println(j);
+    // JsonArray raiz = j.asJsonArray();
+    // System.out.println("Numero de pelis:" + raiz.size());
+    JsonArray raiz = creaArray();
+    for (JsonValue peli : raiz) {
+      JsonObject p = peli.asJsonObject();
+      // metemos la clave titulo y obtenemos su valor
+      System.out.printf("Titulo:%s, Año:%d\n", p.getString("titulo"), p.getInt("año"));
+      JsonArray interpretes = p.getJsonArray("interpretes");
+      System.out.println("Interpretes:");
+      for (JsonValue interprete : interpretes) {
+        JsonObject inter = interprete.asJsonObject();
+        System.out.println(inter.getString("nombre"));
+        System.out.printf("Fecha de nacimiento: año - %d, mes - %d\n",
+            inter.getJsonObject("fechaNacimiento").getInt("año"), inter.getJsonObject("fechaNacimiento").getInt("mes"));
+      }
+    }
+  }
+
+  public static JsonArray creaArray() {
+    JsonArray array = (JsonArray) Json.createArrayBuilder()
+        .add(Json.createObjectBuilder()
+            .add("titulo", "El atlas de las nubes")
+            .add("año", 2012)
+            .add("directores", "Lana Wachowski, Tom Tykwer, Lilly Wachowski")
+            .add("interpretes", Json.createArrayBuilder()
+                .add(Json.createObjectBuilder()
+                    .add("nombre", "Tom Hanks")
+                    .add("fechaNacimiento", Json.createObjectBuilder()
+                        .add("año", 1956)
+                        .add("mes", 8)))
+                .add(Json.createObjectBuilder()
+                    .add("nombre", "Halle Berry")
+                    .add("fechaNacimiento", Json.createObjectBuilder()
+                        .add("año", 1966)
+                        .add("mes", 7)))))
+        .add(Json.createObjectBuilder()
+            .add("titulo", "La red social")
+            .add("año", 2010)
+            .add("directores", "David Fincher")
+            .add("interpretes", Json.createArrayBuilder()
+                .add(Json.createObjectBuilder()
+                    .add("nombre", "Jesse Eisenberg")
+                    .add("fechaNacimiento", Json.createObjectBuilder()
+                        .add("año", 1983)
+                        .add("mes", 9)))
+                .add(Json.createObjectBuilder()
+                    .add("nombre", "Andrew Garfield")
+                    .add("fechaNacimiento", Json.createObjectBuilder()
+                        .add("año", 1983)
+                        .add("mes", 7)))))
+        .build();
+    return array;
+  }
+
+  public static void main(String[] args) throws FileNotFoundException {
+    // JsonValue json = leeJSON("https://pokeapi.co/api/v2/pokemon/ditto");
+    // escribeJSON(json, new File("src\\main\\java\\resources\\ditto.json"));
+    navegarPelis();
   }
 }
