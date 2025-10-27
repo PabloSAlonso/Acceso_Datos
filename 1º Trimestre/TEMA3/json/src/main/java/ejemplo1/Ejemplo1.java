@@ -43,6 +43,9 @@ import javax.json.JsonWriter;
 import javax.json.stream.JsonGenerator;
 
 import java.net.URL;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -225,16 +228,44 @@ public class Ejemplo1 {
 
   public static String ejercicio5(JsonObject jo) {
     String nombre;
-    nombre = jo.getString("nombre");
+    nombre = jo.getString("name");
     return nombre;
   }
 
-  public static String ejercicio6(JsonObject jo) {
+  public static double[] ejercicio6(JsonObject jo) {
     JsonObject coord = jo.getJsonObject("coord");
     double lat = coord.getJsonNumber("lat").doubleValue();
     double lon = coord.getJsonNumber("lon").doubleValue();
     double[] coordenadas = { lat, lon };
-    return String.format("Coordenadas: lat -> %f, lon -> %f",coordenadas[0], coordenadas[1]);
+    return coordenadas;
+  }
+
+  public static String ejercicio7(JsonObject jo){
+    long fecha = jo.getInt("dt");
+
+    JsonObject main = jo.getJsonObject("main");
+
+    double temp = main.getJsonNumber("temp").doubleValue();
+
+    int humedad = main.getInt("humidity");
+    
+    JsonObject nubes = jo.getJsonObject("clouds");
+
+    int prob_nubes = nubes.getInt("all");
+
+    JsonObject viento = jo.getJsonObject("wind");
+    double velocidad = viento.getJsonNumber("speed").doubleValue();
+
+    JsonArray tiempo = jo.getJsonArray("weather");
+    JsonObject pronostico = tiempo.getJsonObject(0);
+    String descripcion = pronostico.getString("description");
+
+    return String.format("Fecha: %s, Tº: %f, humedad: %d, porc.nubes: %d, vel.viento: %f, pronostico: %s", unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
+  }
+
+  public static String unixTimeToString(long unixTime) {
+    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    return Instant.ofEpochSecond(unixTime).atZone(ZoneId.of("GMT+1")).format(formatter);
   }
 
   public static void main(String[] args) throws FileNotFoundException {
@@ -244,15 +275,28 @@ public class Ejemplo1 {
     // generaEndisco(new File("src\\main\\java\\resources\\pelisgenerado.json"));
 
     JsonValue j = ejercicio1();
-
+    System.out.println("EJERCICIO 1");
+    System.out.println(j);
+    
     JsonValue j2 = ejercicio2(42.232819, -8.72264);
-
-    JsonValue j3 = ejercicio3(42.232819, -8.72264, 20);
-
+    System.out.println("EJERCICIO 2");
+    System.out.println(j2);
+    
+    JsonValue j3 = ejercicio3(42.232819, -8.72264, 1);
+    System.out.println("EJERCICIO 3");
+    System.out.println(j3);
+    
     JsonObject jo1 = j.asJsonObject();
-    System.out.println("Ejercicio 4:" + ejercicio4(jo1));
-
+    System.out.println("EJERCICIO 4");
+    System.out.println(ejercicio4(jo1));
+    
+    System.out.println("EJERCICIO 5");
+    System.out.println(ejercicio5(jo1));
+    
+    System.out.println("EJERCICIO 6");
     System.out.println(ejercicio6(jo1));
-
+    
+    System.out.println("EJERCICIO 7");
+    System.out.println(ejercicio7(jo1));
   }
 }
