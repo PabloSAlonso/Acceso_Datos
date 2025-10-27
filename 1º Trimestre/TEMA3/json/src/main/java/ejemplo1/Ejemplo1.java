@@ -33,7 +33,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.URL;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -42,6 +41,10 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.stream.JsonGenerator;
+
+import java.net.URL;
+import java.util.ArrayList;
+
 import javax.net.ssl.HttpsURLConnection;
 
 public class Ejemplo1 {
@@ -195,10 +198,61 @@ public class Ejemplo1 {
         .close();
   }
 
+  public static JsonValue ejercicio1() {
+    String ciudad = "ourense";
+    JsonValue j = leeJSON("https://api.openweathermap.org/data/2.5/weather?q=" + ciudad
+        + ",es&lang=es&units=metric&APPID=8f8dccaf02657071004202f05c1fdce0");
+    return j;
+  }
+
+  public static JsonValue ejercicio2(double lat, double lon) {
+    JsonValue j = leeJSON("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon
+        + "&APPID=8f8dccaf02657071004202f05c1fdce0");
+    return j;
+  }
+
+  public static JsonValue ejercicio3(double lat, double lon, int x) {
+    JsonValue j = leeJSON("http://api.openweathermap.org/data/2.5/find?lat=" + lat + "&lon=" + lon + "&cnt=" + x
+        + "&APPID=a975f935caf274ab016f4308ffa23453");
+    return j;
+  }
+
+  public static int ejercicio4(JsonObject jo) {
+    int id;
+    id = jo.getInt("id");
+    return id;
+  }
+
+  public static String ejercicio5(JsonObject jo) {
+    String nombre;
+    nombre = jo.getString("nombre");
+    return nombre;
+  }
+
+  public static String ejercicio6(JsonObject jo) {
+    JsonObject coord = jo.getJsonObject("coord");
+    double lat = coord.getJsonNumber("lat").doubleValue();
+    double lon = coord.getJsonNumber("lon").doubleValue();
+    double[] coordenadas = { lat, lon };
+    return String.format("Coordenadas: lat -> %f, lon -> %f",coordenadas[0], coordenadas[1]);
+  }
+
   public static void main(String[] args) throws FileNotFoundException {
     // JsonValue json = leeJSON("https://pokeapi.co/api/v2/pokemon/ditto");
     // escribeJSON(json, new File("src\\main\\java\\resources\\ditto.json"));
     // navegarPelis();
-    generaEndisco(new File("src\\main\\java\\resources\\pelisgenerado.json"));
+    // generaEndisco(new File("src\\main\\java\\resources\\pelisgenerado.json"));
+
+    JsonValue j = ejercicio1();
+
+    JsonValue j2 = ejercicio2(42.232819, -8.72264);
+
+    JsonValue j3 = ejercicio3(42.232819, -8.72264, 20);
+
+    JsonObject jo1 = j.asJsonObject();
+    System.out.println("Ejercicio 4:" + ejercicio4(jo1));
+
+    System.out.println(ejercicio6(jo1));
+
   }
 }
