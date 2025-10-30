@@ -262,6 +262,28 @@ public class Varios {
 
     return String.format("Fecha: %s, Tº: %f, humedad: %d, porc.nubes: %d, vel.viento: %f, pronostico: %s", unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
   }
+  public static void ejercicio8(JsonObject jo){
+    long fecha = jo.getInt("dt");
+
+    JsonObject main = jo.getJsonObject("main");
+
+    double temp = main.getJsonNumber("temp").doubleValue();
+
+    int humedad = main.getInt("humidity");
+    
+    JsonObject nubes = jo.getJsonObject("clouds");
+
+    int prob_nubes = nubes.getInt("all");
+
+    JsonObject viento = jo.getJsonObject("wind");
+    double velocidad = viento.getJsonNumber("speed").doubleValue();
+
+    JsonArray tiempo = jo.getJsonArray("weather");
+    JsonObject pronostico = tiempo.getJsonObject(0);
+    String descripcion = pronostico.getString("description");
+
+    System.out.printf("Fecha: %s, Tº: %f, humedad: %d, porc.nubes: %d, vel.viento: %f, pronostico: %s", unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
+  }
 
   public static String unixTimeToString(long unixTime) {
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -298,5 +320,10 @@ public class Varios {
     
     System.out.println("EJERCICIO 7");
     System.out.println(ejercicio7(jo1));
+    
+    System.out.println("EJERCICIO 8");
+    JsonObject jo3 = j3.asJsonObject();
+    ejercicio8(jo3);
+https://prod.liveshare.vsengsaas.visualstudio.com/join?CB774C049E3004F7C7BD3514E6BC20C55BCF
   }
 }
