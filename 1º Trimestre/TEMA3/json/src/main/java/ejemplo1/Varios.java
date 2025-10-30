@@ -201,8 +201,7 @@ public class Varios {
         .close();
   }
 
-  public static JsonValue ejercicio1() {
-    String ciudad = "ourense";
+  public static JsonValue ejercicio1(String ciudad) {
     JsonValue j = leeJSON("https://api.openweathermap.org/data/2.5/weather?q=" + ciudad
         + ",es&lang=es&units=metric&APPID=8f8dccaf02657071004202f05c1fdce0");
     return j;
@@ -264,20 +263,18 @@ public class Varios {
         unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
   }
 
-  public static void ejercicio8(JsonObject j) {
+  public static void ejercicio8(JsonObject j, JsonObject j2) {
     JsonArray list = j.getJsonArray("list");
-    for (int i = 0; i < list.size(); i++) {
+    for (int i = 0; i < list.size(); i++) { // Esto para que es?
       JsonObject jo = list.getJsonObject(i);
       long fecha = jo.getInt("dt");
-
+      String cityName = jo.getString("name");
       JsonObject main = jo.getJsonObject("main");
 
       double temp = main.getJsonNumber("temp").doubleValue();
-
       int humedad = main.getInt("humidity");
 
       JsonObject nubes = jo.getJsonObject("clouds");
-
       int prob_nubes = nubes.getInt("all");
 
       JsonObject viento = jo.getJsonObject("wind");
@@ -287,9 +284,48 @@ public class Varios {
       JsonObject pronostico = tiempo.getJsonObject(0);
       String descripcion = pronostico.getString("description");
 
-      System.out.printf("Fecha: %s, Tº: %f, humedad: %d, porc.nubes: %d, vel.viento: %f, pronostico: %s",
-          unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
+      System.out.printf("Ciudad: %s, Fecha: %s, Tº: %f, humedad: %d, porc.nubes: %d, vel.viento: %f, pronostico: %s\n",
+          cityName, unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
     }
+  }
+
+  public static void ejercicio9(JsonObject j) {
+    JsonArray resultados = j.getJsonArray("results");
+    for (int i = 0; i < resultados.size(); i++) {
+      String pregunta = j.getString("question");
+
+      String respuestaCorrecta = j.getString("correct_answer");
+
+      JsonArray respuestasIncorrectas = j.getJsonArray("incorrect_answers");
+      System.out.printf("Pregunta: %s\nRespuesta Correcta:%s*\n", pregunta, respuestaCorrecta);
+      for (JsonValue jsonValue : respuestasIncorrectas) {
+        System.err.printf("Respuesta incorrecta:%s\n", jsonValue);
+      }
+    }
+
+    // JsonValue all = JsonUtils
+    // .leeJSON("https://opentdb.com/api.php?amount=20&category=18&difficulty=hard&type=multiple");
+    // JsonObject j = all.asJsonObject();
+    // JsonArray jArr = j.getJsonArray("results");
+    // for (JsonValue jsonValue : jArr) {
+    // JsonObject a = jsonValue.asJsonObject();
+    // String question = a.getString("question");
+    // String correctQuest = a.getString("correct_answer");
+    // JsonArray jArrr = a.getJsonArray("incorrect_answers");
+    // System.out.println(question);
+    // System.out.println("\t * " + correctQuest);
+    // for (JsonValue jsonValue2 : jArrr) {
+    // System.out.println("\t" + jsonValue2);
+    // }
+  }
+
+  public static JsonValue ejercicio9JsonValue() {
+    return leeJSON("https://opentdb.com/api.php?amount=20&category=9&difficulty=hard&type=multiple");
+  }
+
+  public static JsonValue ejercicio10JsonValue(String tipo, String pais) {
+    return leeJSON("https://app.ticketmaster.com/discovery/v2/events.json?classificationName=" + tipo + "&countryCode="
+        + pais + "&apikey=AMXR5Rf8zlr7oGucsebGKvDCLOQmGUGE");
   }
 
   public static String unixTimeToString(long unixTime) {
@@ -303,7 +339,7 @@ public class Varios {
     // navegarPelis();
     // generaEndisco(new File("src\\main\\java\\resources\\pelisgenerado.json"));
 
-    JsonValue j = ejercicio1();
+    JsonValue j = ejercicio1("ourense");
     System.out.println("EJERCICIO 1");
     System.out.println(j);
 
@@ -311,7 +347,7 @@ public class Varios {
     System.out.println("EJERCICIO 2");
     System.out.println(j2);
 
-    JsonValue j3 = ejercicio3(42.232819, -8.72264, 1);
+    JsonValue j3 = ejercicio3(42.232819, -8.72264, 4);
     System.out.println("EJERCICIO 3");
     System.out.println(j3);
 
@@ -325,14 +361,14 @@ public class Varios {
     System.out.println("EJERCICIO 6");
     double lon = ejercicio6(jo1)[0];
     double lat = ejercicio6(jo1)[1];
-    System.out.printf("\nCoordenadas: %f, %f", lon, lat);
+    System.out.printf("Coordenadas: %f, %f\n", lon, lat);
 
     System.out.println("EJERCICIO 7");
     System.out.println(ejercicio7(jo1));
 
     System.out.println("EJERCICIO 8");
     JsonObject jo3 = j3.asJsonObject();
-    ejercicio8(jo3);
+    ejercicio8(jo3, jo1);
     // https://prod.liveshare.vsengsaas.visualstudio.com/join?CB774C049E3004F7C7BD3514E6BC20C55BCF
   }
 }
