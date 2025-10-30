@@ -263,7 +263,7 @@ public class Varios {
         unixTimeToString(fecha), temp, humedad, prob_nubes, velocidad, descripcion);
   }
 
-  public static void ejercicio8(JsonObject j, JsonObject j2) {
+  public static void ejercicio8(JsonObject j) {
     JsonArray list = j.getJsonArray("list");
     for (int i = 0; i < list.size(); i++) { // Esto para que es?
       JsonObject jo = list.getJsonObject(i);
@@ -368,7 +368,10 @@ public class Varios {
 
     System.out.println("EJERCICIO 8");
     JsonObject jo3 = j3.asJsonObject();
-    ejercicio8(jo3, jo1);
+    ejercicio8(jo3);
+
+    System.out.println("EJERCICIO 9");
+    ejercicio9(ejercicio9JsonValue());
     // https://prod.liveshare.vsengsaas.visualstudio.com/join?CB774C049E3004F7C7BD3514E6BC20C55BCF
   }
 }
