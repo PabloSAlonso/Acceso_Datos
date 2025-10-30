@@ -50,7 +50,7 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class Ejemplo1 {
+public class Varios {
   public static JsonValue leeJSON(String ruta) {
     try {
       if (ruta.toLowerCase().startsWith("http://")) {
