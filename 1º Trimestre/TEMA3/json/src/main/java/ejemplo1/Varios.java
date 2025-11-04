@@ -41,6 +41,7 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonLocation;
 
 import java.net.URL;
 import java.time.Instant;
@@ -299,33 +300,57 @@ public class Varios {
       JsonArray respuestasIncorrectas = j.getJsonArray("incorrect_answers");
       System.out.printf("Pregunta: %s\nRespuesta Correcta:%s*\n", pregunta, respuestaCorrecta);
       for (JsonValue jsonValue : respuestasIncorrectas) {
-        System.err.printf("Respuesta incorrecta:%s\n", jsonValue);
+        System.out.printf("Respuesta incorrecta:%s\n", jsonValue);
       }
     }
-
-    // JsonValue all = JsonUtils
-    // .leeJSON("https://opentdb.com/api.php?amount=20&category=18&difficulty=hard&type=multiple");
-    // JsonObject j = all.asJsonObject();
-    // JsonArray jArr = j.getJsonArray("results");
-    // for (JsonValue jsonValue : jArr) {
-    // JsonObject a = jsonValue.asJsonObject();
-    // String question = a.getString("question");
-    // String correctQuest = a.getString("correct_answer");
-    // JsonArray jArrr = a.getJsonArray("incorrect_answers");
-    // System.out.println(question);
-    // System.out.println("\t * " + correctQuest);
-    // for (JsonValue jsonValue2 : jArrr) {
-    // System.out.println("\t" + jsonValue2);
-    // }
   }
 
   public static JsonValue ejercicio9JsonValue() {
     return leeJSON("https://opentdb.com/api.php?amount=20&category=9&difficulty=hard&type=multiple");
   }
 
-  public static JsonValue ejercicio10JsonValue(String tipo, String pais) {
+  public static void ejercicio10(JsonObject jo) {
+    JsonObject embed = jo.getJsonObject("_embedded");
+    JsonArray eventos = embed.getJsonArray("events");
+    for (int i = 0; i < eventos.size(); i++) {
+      JsonObject cadaEvento = eventos.getJsonObject(i);
+      String nombre = cadaEvento.getString("name");
+      System.out.printf("Nombre del evento: %s\n", nombre);
+    }
+
+  }
+
+  public static JsonValue ticketMasterJsonValue(String tipo, String pais) {
     return leeJSON("https://app.ticketmaster.com/discovery/v2/events.json?classificationName=" + tipo + "&countryCode="
         + pais + "&apikey=AMXR5Rf8zlr7oGucsebGKvDCLOQmGUGE");
+  }
+
+  public static void ejercicio11_1(JsonObject jo) {
+    JsonObject embed = jo.getJsonObject("_embedded");
+    JsonArray eventos = embed.getJsonArray("events");
+    for (int i = 0; i < eventos.size(); i++) {
+      JsonObject cadaEvento = eventos.getJsonObject(i);
+      JsonObject embed2 = cadaEvento.getJsonObject("_embedded");
+      JsonArray venues = embed2.getJsonArray("venues");
+      for (int j = 0; j < venues.size(); j++) {
+        JsonObject cadaVenue = venues.getJsonObject(i);
+        String codigoPostal = cadaVenue.getString("postalCode");
+        String lugar = cadaVenue.getString("name");
+        JsonObject ciudad = cadaVenue.getJsonObject("city");
+        String nombreCiudad = ciudad.getString("name");
+        JsonObject pais = cadaVenue.getJsonObject("country");
+        String nombrePais = pais.getString("name");
+        JsonObject direccion = cadaVenue.getJsonObject("address");
+        String nombreDireccion = direccion.getString("line1");
+
+        System.out.printf("Codigo postal: %s, Lugar: %s, Nombre de la ciudad: %s, Nombre del Pais: %s, Direccion: %s",
+            codigoPostal, lugar, nombreCiudad, nombrePais, nombreDireccion);
+      }
+    }
+  }
+
+  public static void ejercicio11_2(JsonObject jo) {
+
   }
 
   public static String unixTimeToString(long unixTime) {
@@ -339,39 +364,49 @@ public class Varios {
     // navegarPelis();
     // generaEndisco(new File("src\\main\\java\\resources\\pelisgenerado.json"));
 
-    JsonValue j = ejercicio1("ourense");
-    System.out.println("EJERCICIO 1");
-    System.out.println(j);
+    // JsonValue j = ejercicio1("ourense");
+    // System.out.println("EJERCICIO 1");
+    // System.out.println(j);
 
-    JsonValue j2 = ejercicio2(42.232819, -8.72264);
-    System.out.println("EJERCICIO 2");
-    System.out.println(j2);
+    // JsonValue j2 = ejercicio2(42.232819, -8.72264);
+    // System.out.println("EJERCICIO 2");
+    // System.out.println(j2);
 
-    JsonValue j3 = ejercicio3(42.232819, -8.72264, 4);
-    System.out.println("EJERCICIO 3");
-    System.out.println(j3);
+    // JsonValue j3 = ejercicio3(42.232819, -8.72264, 4);
+    // System.out.println("EJERCICIO 3");
+    // System.out.println(j3);
 
-    JsonObject jo1 = j.asJsonObject();
-    System.out.println("EJERCICIO 4");
-    System.out.println(ejercicio4(jo1));
+    // JsonObject jo1 = j.asJsonObject();
+    // System.out.println("EJERCICIO 4");
+    // System.out.println(ejercicio4(jo1));
 
-    System.out.println("EJERCICIO 5");
-    System.out.println(ejercicio5(jo1));
+    // System.out.println("EJERCICIO 5");
+    // System.out.println(ejercicio5(jo1));
 
-    System.out.println("EJERCICIO 6");
-    double lon = ejercicio6(jo1)[0];
-    double lat = ejercicio6(jo1)[1];
-    System.out.printf("Coordenadas: %f, %f\n", lon, lat);
+    // System.out.println("EJERCICIO 6");
+    // double lon = ejercicio6(jo1)[0];
+    // double lat = ejercicio6(jo1)[1];
+    // System.out.printf("Coordenadas: %f, %f\n", lon, lat);
 
-    System.out.println("EJERCICIO 7");
-    System.out.println(ejercicio7(jo1));
+    // System.out.println("EJERCICIO 7");
+    // System.out.println(ejercicio7(jo1));
 
-    System.out.println("EJERCICIO 8");
-    JsonObject jo3 = j3.asJsonObject();
-    ejercicio8(jo3);
+    // System.out.println("EJERCICIO 8");
+    // JsonObject jo3 = j3.asJsonObject();
+    // ejercicio8(jo3);
 
-    System.out.println("EJERCICIO 9");
-    ejercicio9(ejercicio9JsonValue());
+    // System.out.println("EJERCICIO 9");
+    // ejercicio9(ejercicio9JsonValue().asJsonObject());
+
+    System.out.println("EJERCICIO 10");
+    ejercicio10(ticketMasterJsonValue("music", "ES").asJsonObject());
+
+    System.out.println("EJERCICIO11_1");
+    ejercicio11_1(ticketMasterJsonValue("music", "ES").asJsonObject());
+    
+    System.out.println("EJERCICIO11_2");
+    ejercicio11_2(ticketMasterJsonValue("music", "ES").asJsonObject());
+
     // https://prod.liveshare.vsengsaas.visualstudio.com/join?CB774C049E3004F7C7BD3514E6BC20C55BCF
   }
 }
