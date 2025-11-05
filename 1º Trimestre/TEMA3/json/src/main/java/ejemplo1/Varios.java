@@ -333,7 +333,7 @@ public class Varios {
       JsonObject embed2 = cadaEvento.getJsonObject("_embedded");
       JsonArray venues = embed2.getJsonArray("venues");
       for (int j = 0; j < venues.size(); j++) {
-        JsonObject cadaVenue = venues.getJsonObject(i);
+        JsonObject cadaVenue = venues.getJsonObject(j);
         String codigoPostal = cadaVenue.getString("postalCode");
         String lugar = cadaVenue.getString("name");
         JsonObject ciudad = cadaVenue.getJsonObject("city");
@@ -343,14 +343,35 @@ public class Varios {
         JsonObject direccion = cadaVenue.getJsonObject("address");
         String nombreDireccion = direccion.getString("line1");
 
-        System.out.printf("Codigo postal: %s, Lugar: %s, Nombre de la ciudad: %s, Nombre del Pais: %s, Direccion: %s",
+        System.out.printf("Codigo postal: %s, Lugar: %s, Nombre de la ciudad: %s, Nombre del Pais: %s, Direccion: %s\n",
             codigoPostal, lugar, nombreCiudad, nombrePais, nombreDireccion);
       }
     }
   }
-
+  
   public static void ejercicio11_2(JsonObject jo) {
-
+    JsonObject embed = jo.getJsonObject("_embedded");
+    JsonArray eventos = embed.getJsonArray("events");
+    for (int i = 0; i < eventos.size(); i++) {
+      JsonObject cadaEvento = eventos.getJsonObject(i);
+      JsonObject embed2 = cadaEvento.getJsonObject("_embedded");
+      JsonArray venues = embed2.getJsonArray("venues");
+      for (int j = 0; j < venues.size(); j++) {
+        JsonObject cadaVenue = venues.getJsonObject(i);
+        String codigoPostal = cadaVenue.getString("postalCode");
+        String lugar = cadaVenue.getString("name");
+        JsonObject ciudad = cadaVenue.getJsonObject("city");
+        String nombreCiudad = ciudad.getString("name");
+        JsonObject pais = cadaVenue.getJsonObject("country");
+        String nombrePais = pais.getString("name");
+        JsonObject direccion = cadaVenue.getJsonObject("address");
+        String nombreDireccion = direccion.getString("line1");
+  
+        System.out.printf("Codigo postal: %s, Lugar: %s, Nombre de la ciudad: %s, Nombre del Pais: %s, Direccion: %s\n",
+            codigoPostal, lugar, nombreCiudad, nombrePais, nombreDireccion);
+      }
+    }
+    
   }
 
   public static String unixTimeToString(long unixTime) {
@@ -398,14 +419,16 @@ public class Varios {
     // System.out.println("EJERCICIO 9");
     // ejercicio9(ejercicio9JsonValue().asJsonObject());
 
-    System.out.println("EJERCICIO 10");
-    ejercicio10(ticketMasterJsonValue("music", "ES").asJsonObject());
+    // System.out.println("EJERCICIO 10");
+    // ejercicio10(ticketMasterJsonValue("music", "ES").asJsonObject());
 
     System.out.println("EJERCICIO11_1");
     ejercicio11_1(ticketMasterJsonValue("music", "ES").asJsonObject());
     
-    System.out.println("EJERCICIO11_2");
-    ejercicio11_2(ticketMasterJsonValue("music", "ES").asJsonObject());
+    // System.out.println("EJERCICIO11_2");
+    // ejercicio11_2(ticketMasterJsonValue("music", "ES").asJsonObject());
+
+    System.out.println("EJERCICIO 12");
 
     // https://prod.liveshare.vsengsaas.visualstudio.com/join?CB774C049E3004F7C7BD3514E6BC20C55BCF
   }
