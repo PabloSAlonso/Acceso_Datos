@@ -26,7 +26,6 @@ public class Ejercicio6 {
         int tamañoBuffer = numCaracteres;
         String[] buffer = new String[tamañoBuffer];
         int inicio = 0;
-
         for (int i = 0; i < tamañoBuffer; i++) {
             inicio = i * numCaracteres;
             int fin = Math.min(inicio + numCaracteres, longitudTotal);

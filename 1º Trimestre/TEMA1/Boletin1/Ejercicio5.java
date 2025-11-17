@@ -15,7 +15,7 @@ public class Ejercicio5 {
 
         try (Scanner sc2 = new Scanner(new File(archivo))) {
             int lineas = 1;
-            while (sc.hasNext()) {
+            while (sc2.hasNext()) {
                 String lineaActual = sc2.nextLine();
                 
                 String[] palabras = lineaActual.split("\\W+");
