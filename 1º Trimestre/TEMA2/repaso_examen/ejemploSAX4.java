@@ -5,20 +5,28 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ejemploSAX4 extends DefaultHandler {
+    boolean esGol = false;
+    boolean esNombre = false;
     int maxGoles = 0;
-    boolean flag = false;
     String goles = "";
-    String equipoGoleador;
+    String equipoGoleador = "";
+    String equipo = "";
+
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // TODO Auto-generated method stub
         super.characters(ch, start, length);
         goles = new String(ch, start, length);
-        if (flag) {
+        equipo = new String(ch, start, length);
+        if (esNombre){
+            equipoGoleador = equipo;
+            esNombre = false;
+        }
+        if (esGol) {
             if (Integer.parseInt(goles) > maxGoles) {
                 maxGoles = Integer.parseInt(goles);
             }
-            flag = false;
+            esGol = false;
         }
     }
 
@@ -46,8 +54,13 @@ public class ejemploSAX4 extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // TODO Auto-generated method stub
         super.startElement(uri, localName, qName, attributes);
-        if (qName == "goals_scored") {
-            flag = true;
+        if (qName == "name") {
+            esNombre = true;
         }
+
+        if (qName == "goals_scored") {
+            esGol = true;
+        }
+
     }
 }
