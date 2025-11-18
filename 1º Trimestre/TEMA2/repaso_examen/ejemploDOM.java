@@ -96,7 +96,7 @@ public class ejemploDOM {
         }
     }
 
-    public static void masEmpates(Document doc){
+    public static void masEmpates(Document doc) {
         NodeList listaTeams = doc.getElementsByTagName("team");
         System.out.println("EQUIPO MAXIMO EMPATADOR");
         int empate = 0;
@@ -104,15 +104,42 @@ public class ejemploDOM {
         String equipo = "";
         String equipoMax = "";
         for (int i = 0; i < listaTeams.getLength(); i++) {
-            Element cadaEquipo = (Element)listaTeams.item(i);
+            Element cadaEquipo = (Element) listaTeams.item(i);
             empate = Integer.parseInt(cadaEquipo.getElementsByTagName("drawn").item(0).getTextContent());
             equipo = cadaEquipo.getElementsByTagName("name").item(0).getTextContent();
-            if (empate > empateMax){
+            if (empate > empateMax) {
                 empateMax = empate;
                 equipoMax = equipo;
             }
         }
         System.out.printf("El equipo %s ha sido el maximo empatador con %d empates\n", equipoMax, empateMax);
+    }
+
+    public static void clasiTercerPartido(Document doc) {
+        NodeList listaEventos = doc.getElementsByTagName("evento");
+        System.out.println("CLASIFICACION EQUIPOS 3º PARTIDO");
+        String equipoLocal = "";
+        String equipoVisitante = "";
+        String rangoLocal = "";
+        String rangoVisitante = "";
+        Element tercerPartido = (Element) listaEventos.item(2);
+        equipoLocal = tercerPartido.getElementsByTagName("equipolocal").item(0).getTextContent();
+        equipoVisitante = tercerPartido.getElementsByTagName("equipovisitante").item(0).getTextContent();
+
+        NodeList equipos = doc.getElementsByTagName("team");
+        for (int i = 0; i < equipos.getLength(); i++) {
+            Element cadaEquipo = (Element) equipos.item(i);
+            String nombreEquipo = cadaEquipo.getElementsByTagName("name").item(0).getTextContent();
+            if (nombreEquipo.equals(equipoLocal)) {
+                rangoLocal = cadaEquipo.getElementsByTagName("rank").item(0).getTextContent();
+            }
+            if (nombreEquipo.equals(equipoVisitante)) {
+                rangoVisitante = cadaEquipo.getElementsByTagName("rank").item(0).getTextContent();
+            }
+        }
+        System.out.printf("Equipo Local:%s con Rango %s, Equipo Visitante:%s con Rango %s", equipoLocal,
+                rangoLocal, equipoVisitante, rangoVisitante);
+
     }
 
     public static void main(String[] args) {
@@ -135,8 +162,14 @@ public class ejemploDOM {
 
         // Ejercicio 5
         partidoColista(doc);
-
-        //Ejercicio 6
+        System.out.println();
+        
+        // Ejercicio 6
         masEmpates(doc);
+        System.out.println();
+        
+        // Ejercicio 7
+        clasiTercerPartido(doc);
+        System.out.println();
     }
 }
