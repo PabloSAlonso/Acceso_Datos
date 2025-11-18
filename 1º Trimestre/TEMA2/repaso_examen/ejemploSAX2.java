@@ -4,24 +4,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class ejemploSAX extends DefaultHandler  {
-    boolean flag = false;
-    String temporada;
+public class ejemploSAX2 extends DefaultHandler {
+    
+    int contador = 0;
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // TODO Auto-generated method stub
         super.characters(ch, start, length);
-        temporada = new String(ch, start, length);
-        if (flag){
-            System.out.println(temporada);
-            flag = false;
-        }
     }
 
     @Override
     public void endDocument() throws SAXException {
         // TODO Auto-generated method stub
         super.endDocument();
+        System.out.println(contador);
     }
 
     @Override
@@ -34,14 +30,15 @@ public class ejemploSAX extends DefaultHandler  {
     public void startDocument() throws SAXException {
         // TODO Auto-generated method stub
         super.startDocument();
+        
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // TODO Auto-generated method stub
         super.startElement(uri, localName, qName, attributes);
-        if (qName.equals("temporada")){
-            flag = true;
+        if (qName == "evento"){
+            contador++;
         }
     }
     

@@ -4,18 +4,19 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class ejemploSAX extends DefaultHandler  {
+public class ejemploSAX3 extends DefaultHandler {
     boolean flag = false;
-    String temporada;
+    String contenido = "";
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // TODO Auto-generated method stub
         super.characters(ch, start, length);
-        temporada = new String(ch, start, length);
+        contenido = new String(ch, start, length);
         if (flag){
-            System.out.println(temporada);
+            System.out.println(contenido);
             flag = false;
         }
+
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ejemploSAX extends DefaultHandler  {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // TODO Auto-generated method stub
         super.startElement(uri, localName, qName, attributes);
-        if (qName.equals("temporada")){
+        if (qName == "equipolocal" || qName == "equipovisitante" || qName == "fecha"){
             flag = true;
         }
     }

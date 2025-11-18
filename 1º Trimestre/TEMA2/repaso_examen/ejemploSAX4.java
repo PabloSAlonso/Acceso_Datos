@@ -4,16 +4,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class ejemploSAX extends DefaultHandler  {
+public class ejemploSAX4 extends DefaultHandler {
+    int maxGoles = 0;
     boolean flag = false;
-    String temporada;
+    String goles = "";
+    String equipoGoleador;
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // TODO Auto-generated method stub
         super.characters(ch, start, length);
-        temporada = new String(ch, start, length);
-        if (flag){
-            System.out.println(temporada);
+        goles = new String(ch, start, length);
+        if (flag) {
+            if (Integer.parseInt(goles) > maxGoles) {
+                maxGoles = Integer.parseInt(goles);
+            }
             flag = false;
         }
     }
@@ -22,6 +26,7 @@ public class ejemploSAX extends DefaultHandler  {
     public void endDocument() throws SAXException {
         // TODO Auto-generated method stub
         super.endDocument();
+        System.out.println(maxGoles);
     }
 
     @Override
@@ -34,15 +39,15 @@ public class ejemploSAX extends DefaultHandler  {
     public void startDocument() throws SAXException {
         // TODO Auto-generated method stub
         super.startDocument();
+
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // TODO Auto-generated method stub
         super.startElement(uri, localName, qName, attributes);
-        if (qName.equals("temporada")){
+        if (qName == "goals_scored") {
             flag = true;
         }
     }
-    
 }

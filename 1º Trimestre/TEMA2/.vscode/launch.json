@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "getSax",
+            "request": "launch",
+            "mainClass": "repaso_examen.getSax",
+            "projectName": "TEMA2_280530a5"
+        },
+        {
+            "type": "java",
+            "name": "getSax1",
+            "request": "launch",
+            "mainClass": "repaso_examen.getSax1",
+            "projectName": "TEMA2_280530a5"
+        },
+        {
+            "type": "java",
             "name": "ejemploDOM",
             "request": "launch",
             "mainClass": "repaso_examen.ejemploDOM",
