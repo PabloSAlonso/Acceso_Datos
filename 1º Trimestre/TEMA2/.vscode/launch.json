@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ejemploDOM",
+            "request": "launch",
+            "mainClass": "repaso_examen.ejemploDOM",
+            "projectName": "TEMA2_280530a5"
+        },
+        {
+            "type": "java",
             "name": "getSaxBoletin",
             "request": "launch",
             "mainClass": "getSaxBoletin",
