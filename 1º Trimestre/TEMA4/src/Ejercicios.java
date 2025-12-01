@@ -99,18 +99,125 @@ public class Ejercicios {
         ps.setInt(2, edad);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            System.out.println(rs.getInt(1)+"\n");
+            System.out.println(rs.getInt(1) + "\n");
+        }
+    }
+
+    public static void consultarCadena(String cadena) {
+        try (Statement st = conexion.createStatement()) {
+            int cont = 0;
+            String consulta = String.format("SELECT * FROM alumnos WHERE nombre LIKE '%%%s%%'", cadena);
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                System.out.printf("Codigo: %d, Nombre: %s, ", rs.getInt("Codigo"), rs.getString("Nombre"));
+                cont++;
+            }
+            System.out.println("Numero Resultados:" + cont);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void altaAlumnos(String nombre, String apellidos, int altura, int aula) {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = String.format(
+                    "INSERT INTO alumnos (nombre, apellidos, altura, aula) VALUES ('%s', '%s', %d, %d)", nombre,
+                    apellidos,
+                    altura, aula);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Filas afectadas:" + resultado);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void altaAsignaturas(String nombre) {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = String.format("INSERT INTO asignaturas (nombre) VALUES ('%s')", nombre);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Filas afectadas:" + resultado);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void bajaAlumnos(int codigo) {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = String.format("DELETE FROM alumnos WHERE codigo = %d", codigo);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Filas afectadas:" + resultado);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void bajaAsignaturas(int codigo) {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = String.format("DELETE FROM asignaturas WHERE codigo = %d", codigo);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Filas afectadas:" + resultado);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void modificaAlumnos(int codigo, String nombreNuevo) {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = String.format("UPDATE alumnos SET nombre = '%s' WHERE codigo = %d", nombreNuevo, codigo);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Filas afectadas:" + resultado);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void modificaConsultas(int codigo) {
+        try (Statement st = conexion.createStatement()) {
+
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void realizaConsultas() {
+        try (Statement st = conexion.createStatement()) {
+
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    public static void consultarConPatron() {
+        try (Statement st = conexion.createStatement()) {
+
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
         }
     }
 
     public static void main(String[] args) {
-        abrirConexion("celta", "localhost", "root", "");
+        abrirConexion("add", "localhost", "root", "");
 
-        consultarJugadores();
+        // consultarJugadores();
         // borrarJugador(1);
         // muestraMayorTreintaAños();
         // insertarManuel();
-        cambiarNombre();
+        // cambiarNombre();
+
+        // EJERCICIO 1
+        // consultarCadena("a");
+        // EJERCICIO 2
+        altaAlumnos("Diego", "C.Pereira", 172, 33);
+        // EJERCICIO 3
+
+        // EJERCICIO 4
+
+        // EJERCICIO 5
+
+        // EJERCICIO 6
+
+        // EJERCICIO 7
+
         cerrarConexion();
     }
 }
