@@ -103,6 +103,7 @@ public class Ejercicios {
         }
     }
 
+    // 1
     public static void consultarCadena(String cadena) {
         try (Statement st = conexion.createStatement()) {
             int cont = 0;
@@ -118,6 +119,7 @@ public class Ejercicios {
         }
     }
 
+    // 2.1
     public static void altaAlumnos(String nombre, String apellidos, int altura, int aula) {
         try (Statement st = conexion.createStatement()) {
             String consulta = String.format(
@@ -131,6 +133,7 @@ public class Ejercicios {
         }
     }
 
+    // 2.2
     public static void altaAsignaturas(String nombre) {
         try (Statement st = conexion.createStatement()) {
             String consulta = String.format("INSERT INTO asignaturas (nombre) VALUES ('%s')", nombre);
@@ -141,6 +144,7 @@ public class Ejercicios {
         }
     }
 
+    // 3.1
     public static void bajaAlumnos(int codigo) {
         try (Statement st = conexion.createStatement()) {
             String consulta = String.format("DELETE FROM alumnos WHERE codigo = %d", codigo);
@@ -151,6 +155,7 @@ public class Ejercicios {
         }
     }
 
+    // 3.2
     public static void bajaAsignaturas(int codigo) {
         try (Statement st = conexion.createStatement()) {
             String consulta = String.format("DELETE FROM asignaturas WHERE codigo = %d", codigo);
@@ -161,6 +166,7 @@ public class Ejercicios {
         }
     }
 
+    // 4.1
     public static void modificaAlumnos(int codigo, String nombreNuevo) {
         try (Statement st = conexion.createStatement()) {
             String consulta = String.format("UPDATE alumnos SET nombre = '%s' WHERE codigo = %d", nombreNuevo, codigo);
@@ -171,22 +177,58 @@ public class Ejercicios {
         }
     }
 
-    public static void modificaConsultas(int codigo) {
+    // 4.2
+    public static void modificaAsignaturas(int codigo, String nombreNuevo) {
         try (Statement st = conexion.createStatement()) {
-
+            String consulta = String.format("UPDATE asignaturas SET nombre = '%s' WHERE codigo = %d", nombreNuevo,
+                    codigo);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Filas afectadas:" + resultado);
         } catch (SQLException e) {
             System.out.println("Error de consulta");
         }
     }
 
-    public static void realizaConsultas() {
+    // 5.1
+    public static void aulasConAlumnos() {
         try (Statement st = conexion.createStatement()) {
-
+            String consulta = "SELECT * FROM alumnos JOIN aulas ON alumnos.aula = aulas.numero WHERE aulas.nombreAula IS NOT NULL";
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                System.out.println(rs.getString("nombreAula"));
+            }
         } catch (SQLException e) {
             System.out.println("Error de consulta");
         }
     }
 
+    // 5.2
+    public static void alumnosAsignaturasAprobados() {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = "SELECT * FROM alumnos JOIN asignaturas JOIN notas ON asignaturas.COD = notas.asignatura AND alumnos.codigo = notas.alumno WHERE NOTA >= 5";
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                System.out.printf("Nombre alumno: %s, Nombre Asignatura: %s\n", rs.getString(2),rs.getString(7));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    // 5.3
+    public static void asignaturaSinAlumnos() {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = "";
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                
+            }
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    // 6
     public static void consultarConPatron() {
         try (Statement st = conexion.createStatement()) {
 
@@ -207,13 +249,17 @@ public class Ejercicios {
         // EJERCICIO 1
         // consultarCadena("a");
         // EJERCICIO 2
-        altaAlumnos("Diego", "C.Pereira", 172, 33);
-        // EJERCICIO 3
-
-        // EJERCICIO 4
-
+        // altaAlumnos("Diego", "C.Pereira", 172, 33);
+        // altaAsignaturas(null);
+        // // EJERCICIO 3
+        // bajaAlumnos(0);
+        // bajaAsignaturas(0);
+        // // EJERCICIO 4
+        // modificaAlumnos(0, null);
+        // modificaAsignaturas(0, null);
         // EJERCICIO 5
-
+        // aulasConAlumnos();
+        alumnosAsignaturasAprobados();
         // EJERCICIO 6
 
         // EJERCICIO 7
