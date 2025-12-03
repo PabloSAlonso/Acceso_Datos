@@ -221,10 +221,12 @@ public class Varios {
     // 5.3
     public static void asignaturaSinAlumnos() {
         try (Statement st = conexion.createStatement()) {
-            String consulta = "SELECT asignaturas.NOMBRE FROM asignaturas JOIN alumnos JOIN notas ON asignaturas.COD = notas.asignatura AND alumnos.codigo = notas.alumno WHERE asignaturas.COD NOT IN (SELECT asignatura FROM notas)";
+            String consulta = "SELECT asignaturas.NOMBRE FROM asignaturas WHERE NOT EXISTS (SELECT asignatura FROM notas WHERE notas.asignatura = asignaturas.COD)";// revisar
+                                                                                                                                                                    // el
+                                                                                                                                                                    // where
             ResultSet rs = st.executeQuery(consulta);
             while (rs.next()) {
-                System.out.printf("Asignatura sin alumnos: %s\n",rs.getString("NOMBRE"));
+                System.out.printf("Asignatura sin alumnos: %s\n", rs.getString("NOMBRE"));
             }
         } catch (SQLException e) {
             System.out.println("Error de consulta");
@@ -232,47 +234,68 @@ public class Varios {
     }
 
     // 6
-    public static void consultarConPatron() {
+    public static void consultarConPatron(String patron, int altura) {
         try (Statement st = conexion.createStatement()) {
-
+            String consulta = String.format("SELECT nombre FROM alumnos WHERE nombre LIKE \"%%%s%%\" AND altura > %d",
+                    patron, altura);
+            ResultSet rs = st.executeQuery(consulta);
+            while (rs.next()) {
+                System.out.println(rs.getString("nombre"));
+            }
         } catch (SQLException e) {
             System.out.println("Error de consulta");
         }
     }
 
-    public static void getInfo(String databaseName){
+    public static void consultarConPatronPreparada(String patron, int altura) throws SQLException {
+
+        String consultaPreparada = "SELECT nombre FROM alumnos WHERE nombre like '%%?%%' AND altura > ?";
+        ps = conexion.prepareStatement(consultaPreparada);
+        ps.setString(1, patron);
+        ps.setInt(2, altura);
+        ResultSet rs = ps.executeQuery(consultaPreparada);
+        while (rs.next()) {
+            System.out.println(rs.getString("nombre"));
+        }
+    }
+
+    public static void getInfo(String databaseName) {
         try {
-            DatabaseMetaData dbmd = conexion.getMetaData(); //coge informacion de la base de datos
-            ResultSet tablas = dbmd.getTables(databaseName,null,null, null);
+            DatabaseMetaData dbmd = conexion.getMetaData(); // coge informacion de la base de datos
+            ResultSet tablas = dbmd.getTables(databaseName, null, null, null);
             while (tablas.next()) {
                 System.out.println(tablas.getString("TABLE_NAME") + " - " + tablas.getString("TABLE_TYPE"));
                 ResultSet columnas = dbmd.getColumns(databaseName, null, tablas.getString("TABLE_NAME"), null);
                 System.out.println("COLUMNAS:");
                 while (columnas.next()) {
-                    System.out.printf("Nombre:%s, Tipo:%s, Tamaño:%d, Nullable:%s, Autoincrementado:%s\n",columnas.getString("COLUMN_NAME"),columnas.getString("TYPE_NAME"), columnas.getInt("COLUMN_SIZE"), columnas.getString("IS_NULLABLE"), columnas.getString("IS_AUTOINCREMENT"));
+                    System.out.printf("Nombre:%s, Tipo:%s, Tamaño:%d, Nullable:%s, Autoincrementado:%s\n",
+                            columnas.getString("COLUMN_NAME"), columnas.getString("TYPE_NAME"),
+                            columnas.getInt("COLUMN_SIZE"), columnas.getString("IS_NULLABLE"),
+                            columnas.getString("IS_AUTOINCREMENT"));
                 }
             }
         } catch (SQLException e) {
             System.out.println("Error");
         }
-    }   
+    }
 
-    public static void getInfoConsultas(){
-        try (Statement st = conexion.createStatement()){
+    public static void getInfoConsultas() {
+        try (Statement st = conexion.createStatement()) {
             String consulta = "SELECT * FROM alumnos";
             ResultSet rs = st.executeQuery(consulta);
             ResultSetMetaData rsmd = rs.getMetaData();
             System.out.println("NUM NAME TYPE");
             for (int i = 1; i < rsmd.getColumnCount(); i++) {
-                System.out.printf("Indice:%d, NombreCol:%s, Tipo:%s\n", i, rsmd.getColumnName(i), rsmd.getColumnTypeName(i));
+                System.out.printf("Indice:%d, NombreCol:%s, Tipo:%s\n", i, rsmd.getColumnName(i),
+                        rsmd.getColumnTypeName(i));
             }
-                
+
         } catch (SQLException e) {
             System.out.println("Error");
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         abrirConexion("add", "localhost", "root", "");
 
         // consultarJugadores();
@@ -295,13 +318,15 @@ public class Varios {
         // EJERCICIO 5
         // aulasConAlumnos();
         // alumnosAsignaturasAprobados();
+        // asignaturaSinAlumnos();
         // EJERCICIO 6
-
+        consultarConPatron("a", 156);
+        consultarConPatronPreparada("a", 1);
         // EJERCICIO 7
 
         // INFORMACION DE LA BD
         // getInfo("add");
-        getInfoConsultas();
+        // getInfoConsultas();
         cerrarConexion();
     }
 }
