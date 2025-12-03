@@ -1,12 +1,15 @@
 import java.awt.Taskbar.State;
+import java.security.PublicKey;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Ejercicios {
+public class Varios {
     private static Connection conexion;
 
     public static void abrirConexion(String bd, String servidor, String usuario,
@@ -208,7 +211,7 @@ public class Ejercicios {
             String consulta = "SELECT * FROM alumnos JOIN asignaturas JOIN notas ON asignaturas.COD = notas.asignatura AND alumnos.codigo = notas.alumno WHERE NOTA >= 5";
             ResultSet rs = st.executeQuery(consulta);
             while (rs.next()) {
-                System.out.printf("Nombre alumno: %s, Nombre Asignatura: %s\n", rs.getString(2),rs.getString(7));
+                System.out.printf("Nombre alumno: %s, Nombre Asignatura: %s\n", rs.getString(2), rs.getString(7));
             }
         } catch (SQLException e) {
             System.out.println("Error de consulta");
@@ -218,10 +221,10 @@ public class Ejercicios {
     // 5.3
     public static void asignaturaSinAlumnos() {
         try (Statement st = conexion.createStatement()) {
-            String consulta = "";
+            String consulta = "SELECT asignaturas.NOMBRE FROM asignaturas JOIN alumnos JOIN notas ON asignaturas.COD = notas.asignatura AND alumnos.codigo = notas.alumno WHERE asignaturas.COD NOT IN (SELECT asignatura FROM notas)";
             ResultSet rs = st.executeQuery(consulta);
             while (rs.next()) {
-                
+                System.out.printf("Asignatura sin alumnos: %s\n",rs.getString("NOMBRE"));
             }
         } catch (SQLException e) {
             System.out.println("Error de consulta");
@@ -234,6 +237,38 @@ public class Ejercicios {
 
         } catch (SQLException e) {
             System.out.println("Error de consulta");
+        }
+    }
+
+    public static void getInfo(String databaseName){
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData(); //coge informacion de la base de datos
+            ResultSet tablas = dbmd.getTables(databaseName,null,null, null);
+            while (tablas.next()) {
+                System.out.println(tablas.getString("TABLE_NAME") + " - " + tablas.getString("TABLE_TYPE"));
+                ResultSet columnas = dbmd.getColumns(databaseName, null, tablas.getString("TABLE_NAME"), null);
+                System.out.println("COLUMNAS:");
+                while (columnas.next()) {
+                    System.out.printf("Nombre:%s, Tipo:%s, Tamaño:%d, Nullable:%s, Autoincrementado:%s\n",columnas.getString("COLUMN_NAME"),columnas.getString("TYPE_NAME"), columnas.getInt("COLUMN_SIZE"), columnas.getString("IS_NULLABLE"), columnas.getString("IS_AUTOINCREMENT"));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error");
+        }
+    }   
+
+    public static void getInfoConsultas(){
+        try (Statement st = conexion.createStatement()){
+            String consulta = "SELECT * FROM alumnos";
+            ResultSet rs = st.executeQuery(consulta);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            System.out.println("NUM NAME TYPE");
+            for (int i = 1; i < rsmd.getColumnCount(); i++) {
+                System.out.printf("Indice:%d, NombreCol:%s, Tipo:%s\n", i, rsmd.getColumnName(i), rsmd.getColumnTypeName(i));
+            }
+                
+        } catch (SQLException e) {
+            System.out.println("Error");
         }
     }
 
@@ -259,11 +294,14 @@ public class Ejercicios {
         // modificaAsignaturas(0, null);
         // EJERCICIO 5
         // aulasConAlumnos();
-        alumnosAsignaturasAprobados();
+        // alumnosAsignaturasAprobados();
         // EJERCICIO 6
 
         // EJERCICIO 7
 
+        // INFORMACION DE LA BD
+        // getInfo("add");
+        getInfoConsultas();
         cerrarConexion();
     }
 }
