@@ -249,7 +249,7 @@ public class Varios {
 
     public static void consultarConPatronPreparada(String patron, int altura) throws SQLException {
 
-        String consultaPreparada = "SELECT nombre FROM alumnos WHERE nombre like '%%?%%' AND altura > ?";
+        String consultaPreparada = "SELECT nombre FROM alumnos WHERE nombre like '%%?%%' AND altura > ?";//FALLAAAAAAAAA
         ps = conexion.prepareStatement(consultaPreparada);
         ps.setString(1, patron);
         ps.setInt(2, altura);
@@ -321,7 +321,7 @@ public class Varios {
         // asignaturaSinAlumnos();
         // EJERCICIO 6
         consultarConPatron("a", 156);
-        consultarConPatronPreparada("a", 1);
+        consultarConPatronPreparada("a", 1);//FALLAAAAAAAAAAAA
         // EJERCICIO 7
 
         // INFORMACION DE LA BD
