@@ -221,9 +221,7 @@ public class Varios {
     // 5.3
     public static void asignaturaSinAlumnos() {
         try (Statement st = conexion.createStatement()) {
-            String consulta = "SELECT asignaturas.NOMBRE FROM asignaturas WHERE NOT EXISTS (SELECT asignatura FROM notas WHERE notas.asignatura = asignaturas.COD)";// revisar
-                                                                                                                                                                    // el
-                                                                                                                                                                    // where
+            String consulta = "SELECT asignaturas.NOMBRE FROM asignaturas WHERE NOT EXISTS (SELECT asignatura FROM notas WHERE notas.asignatura = asignaturas.COD)";
             ResultSet rs = st.executeQuery(consulta);
             while (rs.next()) {
                 System.out.printf("Asignatura sin alumnos: %s\n", rs.getString("NOMBRE"));
@@ -233,29 +231,63 @@ public class Varios {
         }
     }
 
-    // 6
+    // 6.1
     public static void consultarConPatron(String patron, int altura) {
         try (Statement st = conexion.createStatement()) {
             String consulta = String.format("SELECT nombre FROM alumnos WHERE nombre LIKE \"%%%s%%\" AND altura > %d",
                     patron, altura);
             ResultSet rs = st.executeQuery(consulta);
             while (rs.next()) {
-                System.out.println(rs.getString("nombre"));
+                // System.out.println(rs.getString("nombre"));
             }
         } catch (SQLException e) {
             System.out.println("Error de consulta");
         }
     }
 
+    // 6.2
     public static void consultarConPatronPreparada(String patron, int altura) throws SQLException {
-
-        String consultaPreparada = "SELECT nombre FROM alumnos WHERE nombre like '%%?%%' AND altura > ?";//FALLAAAAAAAAA
+        String consultaPreparada = "SELECT nombre FROM alumnos WHERE nombre like ? AND altura > ?";// Con preparada no
+                                                                                                   // se ponen comillas
+                                                                                                   // ni %
         ps = conexion.prepareStatement(consultaPreparada);
         ps.setString(1, patron);
         ps.setInt(2, altura);
-        ResultSet rs = ps.executeQuery(consultaPreparada);
+        ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            System.out.println(rs.getString("nombre"));
+            // System.out.println(rs.getString("nombre"));
+        }
+    }
+
+    // 8
+    public static void añadirColumna(String tabla, String columna, String tipoDato, String propiedad) {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = String.format("ALTER TABLE %s ADD %s %s %s", tabla, columna, tipoDato, propiedad);
+            int resultado = st.executeUpdate(consulta);
+            System.out.println("Numero de columnas añadidas:" + resultado);
+        } catch (SQLException e) {
+            System.out.println("Error de consulta");
+        }
+    }
+
+    // 9
+    public static void obtenerInfo() {
+        
+    }
+
+    // 10
+    public static void obtenerDatosCol() {
+        try (Statement st = conexion.createStatement()) {
+            String consulta = "select *, nombre as non from alumnos";
+            ResultSet rs = st.executeQuery(consulta);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            System.out.println("NOMBRE_COL | ALIAS_COL | NOMBRE_TIPODATO | AUTOINCREMENTADO | NULLABLE");
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                System.out.printf("%10s %10s %15s %15s %10s\n", rsmd.getColumnName(i), rsmd.getColumnLabel(i),
+                        rsmd.getColumnTypeName(i), rsmd.isAutoIncrement(i), rsmd.isNullable(i));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error");
         }
     }
 
@@ -320,10 +352,21 @@ public class Varios {
         // alumnosAsignaturasAprobados();
         // asignaturaSinAlumnos();
         // EJERCICIO 6
-        consultarConPatron("a", 156);
-        consultarConPatronPreparada("a", 1);//FALLAAAAAAAAAAAA
+        // consultarConPatron("a", 10);
+        // consultarConPatronPreparada("%a%", 10);
         // EJERCICIO 7
+        // long inicio = System.nanoTime();
+        // for (int i = 0; i < 1000; i++) {
+        // consultarConPatron("a", 1); //Tarda mas la no preparada
+        // }
+        // long fin = System.nanoTime();
+        // System.err.println(fin - inicio);
+        // EJERCICIO 8
+        // añadirColumna("alumnos", "Curso", "TINYINT", "");
+        // EJERCICIO 9
 
+        // EJERCICIO 10
+        obtenerDatosCol();
         // INFORMACION DE LA BD
         // getInfo("add");
         // getInfoConsultas();
