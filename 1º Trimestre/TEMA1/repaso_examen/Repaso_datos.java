@@ -1,9 +1,13 @@
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 public class Repaso_datos {
@@ -84,52 +88,95 @@ public class Repaso_datos {
         try (FileInputStream fis = new FileInputStream(fichero_binario);
                 DataInputStream dis = new DataInputStream(fis);
                 FileWriter fw = new FileWriter(fichero_texto)) {
-                    dis.readUTF();
-                    dis.readUTF();
-                    dis.readUTF();
-                    dis.readUTF();
-                    int año = 0;
-                    float valoracion = 0.0f;
-                    String autor = "";
-                    String titulo = "";
-                    Libro nuevo_libro;
-                    while (true) {
-                        año = dis.readInt();
-                        valoracion = dis.readFloat();
-                        titulo = dis.readUTF();
-                        autor = dis.readUTF();
-                        nuevo_libro = new Libro(año, valoracion, titulo, autor);
-                        fw.write(nuevo_libro.toString());
-                        fw.write("\n");
-                    }
+            dis.readUTF();
+            dis.readUTF();
+            dis.readUTF();
+            dis.readUTF();
+            int año = 0;
+            float valoracion = 0.0f;
+            String autor = "";
+            String titulo = "";
+            Libro nuevo_libro;
+            while (true) {
+                año = dis.readInt();
+                valoracion = dis.readFloat();
+                titulo = dis.readUTF();
+                autor = dis.readUTF();
+                nuevo_libro = new Libro(año, valoracion, titulo, autor);
+                fw.write(nuevo_libro.toString());
+                fw.write("\n");
+            }
         } catch (IOException e) {
             System.out.println("Monti bocón");
         }
     }
 
-    public static void main(String[] args) {
+    // Crear el archivo con productos
+    public static void escribir_objetos(String fichero_escrito) {
+        try (FileOutputStream fos = new FileOutputStream(fichero_escrito);
+                ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(new Producto(1, "Producto_uno", 20.0));
+            ;
+            oos.writeObject(new Producto(2, "Producto_dos", 40.0));
+            ;
+            oos.writeObject(new Producto(3, "Producto_tres", 60.0));
+            ;
+            oos.writeObject(new Producto(4, "Producto_cuatro", 80.0));
+            ;
+        } catch (IOException e) {
+            System.out.println("ERROR ARCHIVO");
+        }
+    }
+
+    // Leer un fichero .dat que contiene objetos de tipo Objeto y escribirlos
+    // en un nuevo fichero de texto
+    public static void leer_objetos(String fichero_binario, String fichero_texto) throws ClassNotFoundException {
+        try (FileInputStream fis = new FileInputStream(fichero_binario);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                FileWriter fw = new FileWriter(fichero_texto)) {
+            Producto nuevo_producto;
+            while (true) {
+                nuevo_producto = (Producto) ois.readObject();
+                fw.write(nuevo_producto.toString());
+                fw.write("\n");
+            }
+        } catch (IOException e) {
+            System.out.println("IAGO BOCON");
+        }
+    }
+
+    // Lee un archivo caracter a caracter e indica el numero de ocurrencias en un
+    // archivo nuevo de un
+    // caracter pasado como parámetro
+    public static void leer_ocurrencias(String fichero_leer, String fichero_escribir, String caracter_contar) {
+        try (FileReader fr = new FileReader(fichero_leer); FileWriter fw = new FileWriter(fichero_escribir)) {
+            int contador = 0;
+            int i;
+            String caracter_actual = "";
+            char[] buffer = new char[1];
+            while ((i = fr.read(buffer)) != -1) {
+                caracter_actual = new String(buffer, 0, i);
+                System.out.println(caracter_actual);
+                if (caracter_actual.equals(caracter_contar)) {
+                    contador++;
+                }
+            }
+            fw.write(String.format("Numero de ocurrencias del caracter %s: %d", caracter_contar, contador));
+        } catch (IOException e) {
+            System.out.println("Error de archivo");
+        }
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException {
         // aTexto("repaso_examen\\libros.dat", "repaso_examen\\libros.txt");
         // reemplaza("repaso_examen\\dos.txt", "repaso_examen\\nuevo_dos.txt", "celta",
         // "Ourense");
         // ejercicio_extra_4("repaso_examen\\archivo_ejemplo.txt", "costa");
-        // crear_objetos_libro("repaso_examen\\libros.dat", "repaso_examen\\objetos_libro.txt");
+        // crear_objetos_libro("repaso_examen\\libros.dat",
+        // "repaso_examen\\objetos_libro.txt");
+        // escribir_objetos("repaso_examen\\objetos.dat");
+        // leer_objetos("repaso_examen\\objetos.dat", "repaso_examen\\objetos.txt");
+        leer_ocurrencias("repaso_examen\\ejemplo_caracteres.txt", "repaso_examen\\ejemplo_caracteres_solucion.txt",
+                "a");
     }
 }
-// Ficheros (1.70 pt). Crea el método aTexto que permita transformar un fichero
-// binario que contiene objetos de tipo libro en un fichero texto. La primera
-// línea del
-// fichero binario es una cabecera con los nombres de los datos que se van a
-// escribir.
-// En el fichero de texto generado:
-// Cada libro ocupara una única línea en el fichero de texto.
-// Se verá la cabecera con el nombre de los datos
-// Los datos de cada objeto libro son:
-// Donde:
-// DATA:
-// 19/11/2025
-// El nombre del fichero binario será el mismo que el del fichero origen pero
-// con
-// extensión txt almacenándose en su mismo directorio.
-// Si el fichero de origen no existe o no contiene datos el fichero generado
-// estará vacio
-// Como fuente de datos de pruebas se puede usar el fichero libros.dat.

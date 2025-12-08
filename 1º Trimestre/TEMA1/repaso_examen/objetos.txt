@@ -1,0 +1,4 @@
+Id: 1, Nombre: Producto_uno, Precio: 20,000000
+Id: 2, Nombre: Producto_dos, Precio: 40,000000
+Id: 3, Nombre: Producto_tres, Precio: 60,000000
+Id: 4, Nombre: Producto_cuatro, Precio: 80,000000
