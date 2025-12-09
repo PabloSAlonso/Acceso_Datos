@@ -1,4 +1,4 @@
-package repaso_examen;
+
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -25,13 +25,9 @@ public class Repaso {
         return String.format("La palabra %s ha aparecido %d veces", palabra, contador);
     }
     
-    public static void Ejercicio4extra(String fichero, String palabraEliminar){
-        
-    }
-
 
     public static void main(String[] args) throws FileNotFoundException, IOException, EOFException {
-        // System.out.println(Ejercicio3extra("dos.txt", "celta"));
+        System.out.println(Ejercicio3extra("dos.txt", "celta"));
     }
 
 }

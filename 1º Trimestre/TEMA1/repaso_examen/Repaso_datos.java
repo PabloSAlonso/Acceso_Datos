@@ -167,6 +167,22 @@ public class Repaso_datos {
         }
     }
 
+    public static void leer_ocurrencias_cadenas(String archivo, String palabra) {
+        try (Scanner sc = new Scanner(new File(archivo))) {
+            int contador = 0;
+            String palabra_actual = "";
+            while (sc.hasNext()) {
+                palabra_actual = sc.next();
+                if (palabra_actual.equals(palabra)) {
+                    contador++;
+                }
+            }
+            System.out.println("La palabra ha aparecido:" + contador);
+        } catch (IOException e) {
+            System.out.println("Error de archivo");
+        }
+    }
+
     public static void main(String[] args) throws ClassNotFoundException {
         // aTexto("repaso_examen\\libros.dat", "repaso_examen\\libros.txt");
         // reemplaza("repaso_examen\\dos.txt", "repaso_examen\\nuevo_dos.txt", "celta",
@@ -178,5 +194,6 @@ public class Repaso_datos {
         // leer_objetos("repaso_examen\\objetos.dat", "repaso_examen\\objetos.txt");
         leer_ocurrencias("repaso_examen\\ejemplo_caracteres.txt", "repaso_examen\\ejemplo_caracteres_solucion.txt",
                 "a");
+                leer_ocurrencias_cadenas("libros.txt", "xD");
     }
 }
