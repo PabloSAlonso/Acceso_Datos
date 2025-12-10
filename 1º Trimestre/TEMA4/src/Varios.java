@@ -270,9 +270,94 @@ public class Varios {
         }
     }
 
-    // 9
-    public static void obtenerInfo() {
-        
+    // 9 a)
+    public static void ejercicio_nueve_a() {
+        String nombre_driver, version_driver, url_conexion, nombre_sgbd, version_sgbd, palabras_sgbd;
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            nombre_driver = dbmd.getDriverName();
+            version_driver = dbmd.getDriverVersion();
+            url_conexion = dbmd.getURL();
+            nombre_sgbd = dbmd.getDatabaseProductName();
+            version_sgbd = dbmd.getDatabaseProductVersion();
+            palabras_sgbd = dbmd.getSQLKeywords();
+            System.out.printf(
+                    "Nombre Driver:%s\nVersion Driver:%s\nURL:%s\nNombre del gestor:%s\nVersion del gestor:%s\nPalabras reservadas:%s",
+                    nombre_driver, version_driver, url_conexion, nombre_sgbd, version_sgbd, palabras_sgbd);
+        } catch (SQLException e) {
+            System.out.println("Error de SQL");
+        }
+    }
+
+    // 9 b)
+    public static void ejercicio_nueve_b() {
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getCatalogs();
+            while (rs.next()) {
+                System.out.println(rs.getString("TABLE_CAT"));
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }
+
+    // 9 c)
+    public static void ejercicio_nueve_c() {
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getTables("add", null, null, null);
+            while (rs.next()) {
+                System.out.printf("Nombre tabla:%s, Tipo de tabla:%s\n", rs.getString("TABLE_NAME"),
+                        rs.getString("TABLE_TYPE"));
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }
+
+    // 9 d)
+    public static void ejercicio_nueve_d() {
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getTables("add", null, null, null);
+            while (rs.next()) {
+                if (rs.getString("TABLE_TYPE").equals("VIEW")) {
+                    System.out.printf("Nombre tabla:%s, Tipo de tabla:%s\n", rs.getString("TABLE_NAME"),
+                            rs.getString("TABLE_TYPE"));
+                }
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }
+
+    // 9 e)
+    public static void ejercicio_nueve_e() {
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getCatalogs();
+            ResultSet rsTablas = dbmd.getTables("add", null, null, null);
+            while (rs.next()) {
+                System.out.println(rs.getString("TABLE_CAT"));
+            }
+            while (rsTablas.next()) {
+                System.out.printf("Nombre tabla:%s, Tipo de tabla:%s\n", rsTablas.getString("TABLE_NAME"),
+                        rsTablas.getString("TABLE_TYPE"));
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }
+
+    // 9 f)
+    public static void ejercicio_nueve_f() {
+
+    }
+
+    // 9 g)
+    public static void ejercicio_nueve_g() {
+
     }
 
     // 10
@@ -290,6 +375,14 @@ public class Varios {
             System.out.println("Error");
         }
     }
+
+    // 12
+
+    // 13
+
+    // 15
+
+    // 16
 
     public static void getInfo(String databaseName) {
         try {
@@ -364,9 +457,13 @@ public class Varios {
         // EJERCICIO 8
         // añadirColumna("alumnos", "Curso", "TINYINT", "");
         // EJERCICIO 9
-
+        // ejercicio_nueve_a();
+        // ejercicio_nueve_b();
+        // ejercicio_nueve_c();
+        // ejercicio_nueve_d();
+        ejercicio_nueve_e();
         // EJERCICIO 10
-        obtenerDatosCol();
+        // obtenerDatosCol();
         // INFORMACION DE LA BD
         // getInfo("add");
         // getInfoConsultas();
