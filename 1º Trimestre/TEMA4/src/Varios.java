@@ -352,12 +352,39 @@ public class Varios {
 
     // 9 f)
     public static void ejercicio_nueve_f() {
-
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getProcedures("add", null, null);
+            while (rs.next()) {
+                System.out.println(rs.getString("PROCEDURE_NAME"));
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
     }
 
     // 9 g)
     public static void ejercicio_nueve_g() {
 
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getColumns("add", null, "a%", null);
+            while (rs.next()) {
+                System.out.printf(
+                        "Posicion:%s - Tabla:%s - Nombre Columna:%s - TipoDato:%s - TamañoCol:%s - Nulos:%s - Autoincrementado: %s\n",
+                        rs.getString("ORDINAL_POSITION"), rs.getString("TABLE_NAME"),
+                        rs.getString("COLUMN_NAME"), rs.getString("TYPE_NAME"), rs.getString("COLUMN_SIZE"),
+                        rs.getString("IS_NULLABLE"), rs.getString("IS_AUTOINCREMENT"));
+            }
+
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }
+
+    // 9 h)
+    public static void ejercicio_nueve_h() {
+        
     }
 
     // 10
@@ -461,7 +488,9 @@ public class Varios {
         // ejercicio_nueve_b();
         // ejercicio_nueve_c();
         // ejercicio_nueve_d();
-        ejercicio_nueve_e();
+        // ejercicio_nueve_e();
+        // ejercicio_nueve_f();
+        ejercicio_nueve_g();
         // EJERCICIO 10
         // obtenerDatosCol();
         // INFORMACION DE LA BD
