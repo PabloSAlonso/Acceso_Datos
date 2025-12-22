@@ -1,5 +1,3 @@
-import java.awt.Taskbar.State;
-import java.security.PublicKey;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -7,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Statement;  
 
 public class Varios {
     private static Connection conexion;
@@ -384,7 +382,29 @@ public class Varios {
 
     // 9 h)
     public static void ejercicio_nueve_h() {
-        
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getPrimaryKeys("add", null, null);
+            System.out.println("Claves Primarias:");
+            while (rs.next()) {
+                System.out.println(rs.getString("COLUMN_NAME"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+    }
+
+    public static void ejercicio_nueve_h2(){
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet rs = dbmd.getExportedKeys("add", null, null);
+            System.out.println("Claves Foraneas");
+            while (rs.next()) {
+                System.out.println(rs.getString("FKCOLUMN_NAME"));
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     // 10
@@ -490,7 +510,9 @@ public class Varios {
         // ejercicio_nueve_d();
         // ejercicio_nueve_e();
         // ejercicio_nueve_f();
-        ejercicio_nueve_g();
+        // ejercicio_nueve_g();
+        // ejercicio_nueve_h();
+        ejercicio_nueve_h2(); //Da error, hay que ver ahi
         // EJERCICIO 10
         // obtenerDatosCol();
         // INFORMACION DE LA BD
