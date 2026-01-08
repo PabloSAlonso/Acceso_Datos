@@ -1,11 +1,18 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLDataException;
 import java.sql.SQLException;
-import java.sql.Statement;  
+import java.sql.Statement;
 
 public class Varios {
     private static Connection conexion;
@@ -394,16 +401,18 @@ public class Varios {
         }
     }
 
-    public static void ejercicio_nueve_h2(){
+    // 9 h2)
+    public static void ejercicio_nueve_h2() {
         try {
             DatabaseMetaData dbmd = conexion.getMetaData();
-            ResultSet rs = dbmd.getExportedKeys("add", null, null);
+            // System.out.println("Conexion iniciada");
+            ResultSet rs = dbmd.getExportedKeys("add", null, null); // Esta linea da error
             System.out.println("Claves Foraneas");
             while (rs.next()) {
                 System.out.println(rs.getString("FKCOLUMN_NAME"));
             }
-        } catch (Exception e) {
-            // TODO: handle exception
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
         }
     }
 
@@ -423,14 +432,106 @@ public class Varios {
         }
     }
 
-    // 12
-    
+    // 12_a
+    public static void ejercicio12_a() {
+        try {
+            conexion.setAutoCommit(false);
+            Statement st = conexion.createStatement();
+            st.executeUpdate(
+                    "INSERT INTO alumnos (nombre, apellidos, altura, curso) VALUES ('Pablo', 'Santana Alonso', 170, 2)");
+            System.out.println("Inserción relizada correctamente");
+            conexion.commit();
+            System.out.println("Commit realizado");
+        } catch (SQLException e) {
+            System.out.println("Se ha producido un error en una consulta: " + e.getLocalizedMessage());
+            try {
+                if (conexion != null) {
+                    System.out.println("Se ha producido un error, deshaciendo cambios...");
+                    conexion.rollback();
+                }
+            } catch (SQLException i) {
+                System.out.println("Error en el rollback: " + i.getLocalizedMessage());
+            }
+        }
+    }
 
-    // 13
+    // 12_b
+    public static void ejercicio12_b() {
+        try {
+            conexion.setAutoCommit(false);
+            Statement st = conexion.createStatement();
+            st.executeUpdate(
+                    "INSERT INTO alumnos (nombre, apellidos, altura, curso) VALUES ('Pablo', 'Santana Alonso', 170, 2)");
+            System.out.println("Inserción relizada correctamente");
+            conexion.commit();
+            System.out.println("Commit realizado");
+            st.close();
+        } catch (SQLException e) {
+            try {
+                conexion.rollback();
+            } catch (SQLException i) {
+                System.out.println("Error RollBack");
+            }
+        }
+    }
+
+    // 13_a
+    public static void ejercicio13_a() {
+        try (Statement st = conexion.createStatement()) {
+            ResultSet rs = st.executeQuery("SELECT * FROM imagenes WHERE nombre = 'escritor1.jpg'");
+            InputStream is = rs.getBinaryStream("imagen");
+            try (FileOutputStream fos = new FileOutputStream("C:\\imagenes.dat")) {
+                int i;
+                byte[] buffer = new byte[1000];
+                while ((i = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, i);
+                }
+                is.close();
+            } catch (IOException e) {
+                System.out.println("Error de archivo");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+    }
+
+    // 13_b
+    public static void ejercicio13_b() throws FileNotFoundException {
+        try (Statement st = conexion.createStatement()) {
+            try {
+                FileInputStream fis = new FileInputStream("C:\\imagenes.dat");
+                fis.read();
+                String consulta = "INSERT INTO imagenes VALUES (?,?)";
+                ps = conexion.prepareStatement(consulta);
+                ps.setString(1, "Nuevo_Nombre");
+                ps.setBinaryStream(2, fis, 64);
+            } catch (IOException e) {
+                System.out.println("Error de archivo");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+    }
 
     // 15
+    public static void ejercicio15() {
+        try {
+            CallableStatement cs = conexion.prepareCall("CALL getAulas(?,?)");
+            cs.setInt(1, 10);
+            cs.setString(2, "o");
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()) {
+                System.out.println(); //
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }
 
     // 16
+    public static void ejercicio16() {
+
+    }
 
     public static void getInfo(String databaseName) {
         try {
@@ -513,9 +614,13 @@ public class Varios {
         // ejercicio_nueve_f();
         // ejercicio_nueve_g();
         // ejercicio_nueve_h();
-        ejercicio_nueve_h2(); //Da error, hay que ver ahi
+        // ejercicio_nueve_h2(); // Da error, hay que ver ahi
         // EJERCICIO 10
         // obtenerDatosCol();
+        // EJERCICIO 12
+        // ejercicio12_a();
+        // EJERCICIO 13
+        ejercicio13_a();
         // INFORMACION DE LA BD
         // getInfo("add");
         // getInfoConsultas();
