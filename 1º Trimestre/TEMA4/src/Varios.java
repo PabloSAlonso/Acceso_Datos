@@ -516,15 +516,34 @@ public class Varios {
     // 15
     public static void ejercicio15() {
         try {
+            int numeroAula = 0;
+            String nombreAula = "";
+            int puestos = 0;
             CallableStatement cs = conexion.prepareCall("CALL getAulas(?,?)");
             cs.setInt(1, 10);
             cs.setString(2, "o");
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
-                System.out.println(); //
+                numeroAula = rs.getInt("numero");
+                nombreAula = rs.getString("nombreAula");
+                puestos = rs.getInt("puestos");
+                System.out.printf("Numero:%2d, Nombre:%s, Puestos:%2d",numeroAula, nombreAula, puestos); 
             }
         } catch (SQLException e) {
-            // TODO: handle exception
+            System.out.println("Error SQL");
+        }
+    }
+
+    //15_2
+    public static void ejercicio15_2(){
+        try {
+            CallableStatement cs = conexion.prepareCall("CALL SUMA()");
+            if (cs.execute()){
+                int resultado = cs.getInt(1);
+                System.out.println("Resultado:" + resultado);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
         }
     }
 
@@ -569,7 +588,7 @@ public class Varios {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         abrirConexion("add", "localhost", "root", "");
 
         // consultarJugadores();
@@ -580,22 +599,28 @@ public class Varios {
 
         // EJERCICIO 1
         // consultarCadena("a");
+
         // EJERCICIO 2
         // altaAlumnos("Diego", "C.Pereira", 172, 33);
         // altaAsignaturas(null);
+
         // // EJERCICIO 3
         // bajaAlumnos(0);
         // bajaAsignaturas(0);
+
         // // EJERCICIO 4
         // modificaAlumnos(0, null);
         // modificaAsignaturas(0, null);
+
         // EJERCICIO 5
         // aulasConAlumnos();
         // alumnosAsignaturasAprobados();
         // asignaturaSinAlumnos();
+
         // EJERCICIO 6
         // consultarConPatron("a", 10);
         // consultarConPatronPreparada("%a%", 10);
+
         // EJERCICIO 7
         // long inicio = System.nanoTime();
         // for (int i = 0; i < 1000; i++) {
@@ -603,8 +628,10 @@ public class Varios {
         // }
         // long fin = System.nanoTime();
         // System.err.println(fin - inicio);
+
         // EJERCICIO 8
         // añadirColumna("alumnos", "Curso", "TINYINT", "");
+
         // EJERCICIO 9
         // ejercicio_nueve_a();
         // ejercicio_nueve_b();
@@ -615,12 +642,23 @@ public class Varios {
         // ejercicio_nueve_g();
         // ejercicio_nueve_h();
         // ejercicio_nueve_h2(); // Da error, hay que ver ahi
+
         // EJERCICIO 10
         // obtenerDatosCol();
+
         // EJERCICIO 12
         // ejercicio12_a();
+
         // EJERCICIO 13
-        ejercicio13_a();
+        // ejercicio13_a();
+        // ejercicio13_b();
+
+        //EJERCICIO 15
+        ejercicio15();
+        // ejercicio15_2();
+
+
+
         // INFORMACION DE LA BD
         // getInfo("add");
         // getInfoConsultas();
