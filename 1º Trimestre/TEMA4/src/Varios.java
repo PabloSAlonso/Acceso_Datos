@@ -521,7 +521,7 @@ public class Varios {
             int puestos = 0;
             CallableStatement cs = conexion.prepareCall("CALL getAulas(?,?)");
             cs.setInt(1, 10);
-            cs.setString(2, "o");
+            cs.setString(2, "o");  
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
                 numeroAula = rs.getInt("numero");
