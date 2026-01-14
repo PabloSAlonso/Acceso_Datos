@@ -30,7 +30,6 @@ public class Personas {
 
     @GET
     @Path("/{nombre}")
-    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_JSON)
     public String ver(@PathParam("nombre") String name) {
         for (Persona persona : personas) {
@@ -55,5 +54,5 @@ public class Personas {
         return nombres.toString();
     }
 
-    
+
 }
