@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 public class GestionaPersona {
     public static Persona p;
 
+    //Ejercicio 2.1
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Persona getPersona() {
@@ -23,5 +24,12 @@ public class GestionaPersona {
         return p;
     }
 
-    
+    //Ejercicio 2.2
+    @POST
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPersona(Persona p){
+        return Response.ok(p).build();
+    }
+
 }
