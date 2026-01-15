@@ -9,6 +9,13 @@
             "name": "Varios",
             "request": "launch",
             "mainClass": "Varios",
+            "projectName": "TEMA4_280530a7"
+        },
+        {
+            "type": "java",
+            "name": "Varios",
+            "request": "launch",
+            "mainClass": "Varios",
             "projectName": "TEMA4_b2e74371"
         },
         {

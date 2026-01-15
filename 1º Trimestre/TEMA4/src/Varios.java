@@ -13,6 +13,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 
 public class Varios {
     private static Connection conexion;
@@ -405,12 +406,17 @@ public class Varios {
     public static void ejercicio_nueve_h2() {
         try {
             DatabaseMetaData dbmd = conexion.getMetaData();
-            // System.out.println("Conexion iniciada");
-            ResultSet rs = dbmd.getExportedKeys("add", null, null); // Esta linea da error
-            System.out.println("Claves Foraneas");
-            while (rs.next()) {
-                System.out.println(rs.getString("FKCOLUMN_NAME"));
+            String nomTabla = "";
+            ResultSet rsTablas = dbmd.getTables("add", null, null, null);
+            while (rsTablas.next()) {
+                nomTabla = rsTablas.getString("TABLE_NAME");
+                ResultSet rs = dbmd.getExportedKeys("add", null, nomTabla); // Esta linea da error
+                System.out.println("Claves Foraneas");
+                while (rs.next()) {
+                    System.out.println(rs.getString("FKCOLUMN_NAME"));
+                }
             }
+
         } catch (SQLException e) {
             System.out.println("Error SQL");
         }
@@ -475,7 +481,7 @@ public class Varios {
         }
     }
 
-    // 13_a
+    // 13_a Error
     public static void ejercicio13_a() {
         try (Statement st = conexion.createStatement()) {
             ResultSet rs = st.executeQuery("SELECT * FROM imagenes WHERE nombre = 'escritor1.jpg'");
@@ -495,7 +501,7 @@ public class Varios {
         }
     }
 
-    // 13_b
+    // 13_b Error
     public static void ejercicio13_b() throws FileNotFoundException {
         try (Statement st = conexion.createStatement()) {
             try {
@@ -521,35 +527,70 @@ public class Varios {
             int puestos = 0;
             CallableStatement cs = conexion.prepareCall("CALL getAulas(?,?)");
             cs.setInt(1, 10);
-            cs.setString(2, "o");  
+            cs.setString(2, "o");
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
                 numeroAula = rs.getInt("numero");
                 nombreAula = rs.getString("nombreAula");
                 puestos = rs.getInt("puestos");
-                System.out.printf("Numero:%2d, Nombre:%s, Puestos:%2d",numeroAula, nombreAula, puestos); 
+                System.out.printf("Numero:%2d, Nombre:%s, Puestos:%2d\n", numeroAula, nombreAula, puestos);
             }
         } catch (SQLException e) {
             System.out.println("Error SQL");
         }
     }
 
-    //15_2
-    public static void ejercicio15_2(){
+    // 15_2
+    public static void ejercicio15_2() {
         try {
-            CallableStatement cs = conexion.prepareCall("CALL SUMA()");
-            if (cs.execute()){
-                int resultado = cs.getInt(1);
-                System.out.println("Resultado:" + resultado);
-            }
+            CallableStatement cs = conexion.prepareCall("{ ? = CALL SUMA() }");
+            cs.registerOutParameter(1, Types.INTEGER);
+            cs.execute();
+            int resultado = cs.getInt(1);
+            System.out.println("Resultado:" + resultado);
+
         } catch (SQLException e) {
             System.out.println("Error SQL");
         }
     }
 
     // 16
-    public static void ejercicio16() {
+    public static void ejercicio16(String textoBuscado, String bd) {
+        try {
+            DatabaseMetaData dbmd = conexion.getMetaData();
+            ResultSet tablas = dbmd.getTables(bd, null, "%", new String[] { "TABLE" });
+            while (tablas.next()) {
+                String nombreTabla = tablas.getString("TABLE_NAME");
+                ResultSet columnas = dbmd.getColumns(bd, null, nombreTabla, "%");
+                while (columnas.next()) {
+                    String nombreColumna = columnas.getString("COLUMN_NAME");
+                    String tipo = columnas.getString("TYPE_NAME");
+                    if (tipo.equalsIgnoreCase("CHAR") || tipo.equalsIgnoreCase("VARCHAR")) {
+                        String sql = "SELECT " + nombreColumna +
+                                " FROM " + nombreTabla +
+                                " WHERE " + nombreColumna + " LIKE ?";
+                        PreparedStatement ps = conexion.prepareStatement(sql);
+                        ps.setString(1, "%" + textoBuscado + "%");
+                        ResultSet rs = ps.executeQuery();
+                        while (rs.next()) {
+                            String valor = rs.getString(1);
+                            System.out.println(
+                                    "BD: " + bd +
+                                            " | Tabla: " + nombreTabla +
+                                            " | Columna: " + nombreColumna +
+                                            " | Valor: " + valor);
+                        }
+                        rs.close();
+                        ps.close();
+                    }
+                }
+                columnas.close();
+            }
+            tablas.close();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void getInfo(String databaseName) {
@@ -641,26 +682,25 @@ public class Varios {
         // ejercicio_nueve_f();
         // ejercicio_nueve_g();
         // ejercicio_nueve_h();
-        // ejercicio_nueve_h2(); // Da error, hay que ver ahi
+        // ejercicio_nueve_h2();
 
         // EJERCICIO 10
         // obtenerDatosCol();
 
         // EJERCICIO 12
         // ejercicio12_a();
+        // ejercicio12_b();
 
         // EJERCICIO 13
         // ejercicio13_a();
         // ejercicio13_b();
 
-        //EJERCICIO 15
-        ejercicio15();
+        // EJERCICIO 15
+        // ejercicio15();
         // ejercicio15_2();
 
-        //EJERCICIO 16
-        
-
-
+        // EJERCICIO 16
+        // ejercicio16("a", "add");
 
         // INFORMACION DE LA BD
         // getInfo("add");
