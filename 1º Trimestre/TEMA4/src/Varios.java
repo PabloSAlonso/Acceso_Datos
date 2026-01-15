@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -505,12 +506,13 @@ public class Varios {
     public static void ejercicio13_b() throws FileNotFoundException {
         try (Statement st = conexion.createStatement()) {
             try {
-                FileInputStream fis = new FileInputStream("C:\\imagenes\\imagenes.dat");
+                File f = new File("C:\\imagenes\\imagen.jpg");
+                FileInputStream fis = new FileInputStream(f);
                 fis.read();
                 String consulta = "INSERT INTO imagenes VALUES (?,?)";
                 ps = conexion.prepareStatement(consulta);
                 ps.setString(1, "Nuevo_Nombre");
-                ps.setBinaryStream(2, fis, 64);
+                ps.setBinaryStream(2, fis, f.length());
             } catch (IOException e) {
                 System.out.println("Error de archivo");
             }
@@ -693,7 +695,7 @@ public class Varios {
 
         // EJERCICIO 13
         // ejercicio13_a();
-        // ejercicio13_b();
+        ejercicio13_b();
 
         // EJERCICIO 15
         // ejercicio15();
@@ -705,7 +707,7 @@ public class Varios {
         // INFORMACION DE LA BD
         // getInfo("add");
         // getInfoConsultas();
-        
+
         cerrarConexion();
     }
 }
