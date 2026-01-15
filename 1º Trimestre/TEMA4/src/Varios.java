@@ -486,7 +486,7 @@ public class Varios {
         try (Statement st = conexion.createStatement()) {
             ResultSet rs = st.executeQuery("SELECT * FROM imagenes WHERE nombre = 'escritor1.jpg'");
             InputStream is = rs.getBinaryStream("imagen");
-            try (FileOutputStream fos = new FileOutputStream("C:\\imagenes.dat")) {
+            try (FileOutputStream fos = new FileOutputStream("C:\\imagenes\\imagenes.dat")) {
                 int i;
                 byte[] buffer = new byte[1000];
                 while ((i = is.read(buffer)) != -1) {
@@ -505,7 +505,7 @@ public class Varios {
     public static void ejercicio13_b() throws FileNotFoundException {
         try (Statement st = conexion.createStatement()) {
             try {
-                FileInputStream fis = new FileInputStream("C:\\imagenes.dat");
+                FileInputStream fis = new FileInputStream("C:\\imagenes\\imagenes.dat");
                 fis.read();
                 String consulta = "INSERT INTO imagenes VALUES (?,?)";
                 ps = conexion.prepareStatement(consulta);
@@ -705,6 +705,7 @@ public class Varios {
         // INFORMACION DE LA BD
         // getInfo("add");
         // getInfoConsultas();
+        
         cerrarConexion();
     }
 }
