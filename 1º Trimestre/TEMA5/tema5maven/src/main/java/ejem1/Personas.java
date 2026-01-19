@@ -16,18 +16,21 @@ import jakarta.ws.rs.core.MediaType;
 public class Personas {
     static ArrayList<Persona> personas;
 
+    // Ejercicio 1
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public void guardar(Persona p) {
         personas.add(p);
     }
 
+    // Ejercicio 2
     @GET
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public ArrayList<Persona> listar() {
         return personas;
     }
 
+    // Ejercicio 3
     @GET
     @Path("/{nombre}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +44,7 @@ public class Personas {
         return "No existe la persona: " + name;
     }
 
+    // Ejercicio 4
     @GET
     @Path("/buscar")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -52,6 +56,13 @@ public class Personas {
             }
         }
         return nombres.toString();
+    }
+
+    // Ejercicio 6
+    @Path("/form")
+    @Consumes("application/x-www-form-urlencoded")
+    public void insertarPersonas(){
+        
     }
 
 

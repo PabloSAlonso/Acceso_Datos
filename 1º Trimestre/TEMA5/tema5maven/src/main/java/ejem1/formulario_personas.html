@@ -6,11 +6,25 @@
     <title>Insertar Personas</title>
 </head>
 <body>
-    <h1>Inserte a su persona</h1>
-    <label>ID:</label>
-    <input type="text">
-    <label>Nombre:</label>
-    <input type="text">
-    
+    <form action="http://localhost:8080/tema5maven/rest/personas/form" method="POST">
+        
+        <h1>Inserte a su persona</h1>
+        <label>ID:</label>
+        <input type="text">
+        <br>
+        <label>Nombre:</label>
+        <input type="text">
+        <br>
+        <label>Casado:</label>
+        <input type="checkbox" name="casado">
+        <br>
+        <label for="Género:"></label>
+        <label>Hombre</label>
+        <input type="radio" name="genero" value="hombre">
+        <label>Mujer</label>
+        <input type="radio" name="genero" value="mujer">
+        <br>
+        <input type="submit" value="enviar">
+    </form>
 </body>
 </html>
