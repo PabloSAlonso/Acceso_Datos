@@ -486,16 +486,18 @@ public class Varios {
     public static void ejercicio13_a() {
         try (Statement st = conexion.createStatement()) {
             ResultSet rs = st.executeQuery("SELECT * FROM imagenes WHERE nombre = 'escritor1.jpg'");
-            InputStream is = rs.getBinaryStream("imagen");
-            try (FileOutputStream fos = new FileOutputStream("C:\\imagenes\\imagenes.dat")) {
-                int i;
-                byte[] buffer = new byte[1000];
-                while ((i = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, i);
+            while (rs.next()) {
+                InputStream is = rs.getBinaryStream("imagen");
+                try (FileOutputStream fos = new FileOutputStream("C:\\imagenes\\imagen.jpg")) {
+                    int i;
+                    byte[] buffer = new byte[1000];
+                    while ((i = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, i);
+                    }
+                    is.close();
+                } catch (IOException e) {
+                    System.out.println("Error de archivo");
                 }
-                is.close();
-            } catch (IOException e) {
-                System.out.println("Error de archivo");
             }
         } catch (SQLException e) {
             System.out.println("Error SQL");
@@ -508,7 +510,6 @@ public class Varios {
             try {
                 File f = new File("C:\\imagenes\\imagen.jpg");
                 FileInputStream fis = new FileInputStream(f);
-                fis.read();
                 String consulta = "INSERT INTO imagenes VALUES (?,?)";
                 ps = conexion.prepareStatement(consulta);
                 ps.setString(1, "Nuevo_Nombre");
@@ -641,67 +642,98 @@ public class Varios {
         // cambiarNombre();
 
         // EJERCICIO 1
+        // System.out.println("EJERCICIO 1");
         // consultarCadena("a");
-
-        // EJERCICIO 2
+        
+        // // EJERCICIO 2
+        // System.out.println("EJERCICIO 2_1");
         // altaAlumnos("Diego", "C.Pereira", 172, 33);
+        // System.out.println("EJERCICIO 2_2");
         // altaAsignaturas(null);
-
-        // // EJERCICIO 3
+        
+        // // // EJERCICIO 3
+        // System.out.println("EJERCICIO 3_1");
         // bajaAlumnos(0);
+        // System.out.println("EJERCICIO 3_2");
         // bajaAsignaturas(0);
-
-        // // EJERCICIO 4
+        
+        // // // EJERCICIO 4
+        // System.out.println("EJERCICIO 4_1");
         // modificaAlumnos(0, null);
+        // System.out.println("EJERCICIO 4_2");
         // modificaAsignaturas(0, null);
-
-        // EJERCICIO 5
+        
+        // // EJERCICIO 5
+        // System.out.println("EJERCICIO 5_1");
         // aulasConAlumnos();
+        // System.out.println("EJERCICIO 5_2");
         // alumnosAsignaturasAprobados();
+        // System.out.println("EJERCICIO 5_3");
         // asignaturaSinAlumnos();
-
-        // EJERCICIO 6
+        
+        // // EJERCICIO 6
+        // System.out.println("EJERCICIO 6_1");
         // consultarConPatron("a", 10);
+        // System.out.println("EJERCICIO 6_2");
         // consultarConPatronPreparada("%a%", 10);
-
-        // EJERCICIO 7
+        
+        // // EJERCICIO 7
+        // System.out.println("EJERCICIO 7");
         // long inicio = System.nanoTime();
         // for (int i = 0; i < 1000; i++) {
-        // consultarConPatron("a", 1); //Tarda mas la no preparada
+        //     consultarConPatron("a", 1); //Tarda mas la no preparada
         // }
         // long fin = System.nanoTime();
         // System.err.println(fin - inicio);
-
-        // EJERCICIO 8
+        
+        // // EJERCICIO 8
+        // System.out.println("EJERCICIO 8");
         // añadirColumna("alumnos", "Curso", "TINYINT", "");
-
-        // EJERCICIO 9
+        
+        // // EJERCICIO 9
+        // System.out.println("EJERCICIO 9_a");
         // ejercicio_nueve_a();
+        // System.out.println("EJERCICIO 9_b");
         // ejercicio_nueve_b();
+        // System.out.println("EJERCICIO 9_c");
         // ejercicio_nueve_c();
+        // System.out.println("EJERCICIO 9_d");
         // ejercicio_nueve_d();
+        // System.out.println("EJERCICIO 9_e");
         // ejercicio_nueve_e();
+        // System.out.println("EJERCICIO 9_f");
         // ejercicio_nueve_f();
+        // System.out.println("EJERCICIO 9_g");
         // ejercicio_nueve_g();
+        // System.out.println("EJERCICIO 9_h");
         // ejercicio_nueve_h();
+        // System.out.println("EJERCICIO 9_h2");
         // ejercicio_nueve_h2();
-
-        // EJERCICIO 10
+        
+        // // EJERCICIO 10
+        // System.out.println("EJERCICIO 10");
         // obtenerDatosCol();
-
-        // EJERCICIO 12
+        
+        // // EJERCICIO 12
+        // System.out.println("EJERCICIO 12_a");
         // ejercicio12_a();
+        // System.out.println("EJERCICIO 12_b");
         // ejercicio12_b();
-
-        // EJERCICIO 13
+        
+        // // EJERCICIO 13
+        // System.out.println("EJERCICIO 13_a");
         // ejercicio13_a();
-        ejercicio13_b();
-
-        // EJERCICIO 15
+        // System.out.println("EJERCICIO 13_b");
+        // ejercicio13_b();
+        
+        // // EJERCICIO 15
+        // System.out.println("EJERCICIO 15_1");
         // ejercicio15();
+        // System.out.println("EJERCICIO 15_2");
         // ejercicio15_2();
-
-        // EJERCICIO 16
+        
+        // // EJERCICIO 16
+        // System.out.println("EJERCICIO 16");
         // ejercicio16("a", "add");
 
         // INFORMACION DE LA BD
