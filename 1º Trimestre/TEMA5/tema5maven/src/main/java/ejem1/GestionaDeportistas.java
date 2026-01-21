@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,16 +21,22 @@ public class GestionaDeportistas {
     private static final String URL = "jdbc:mariadb://localhost:3306/ad_tema6";
     private static final String USER = "root";
     private static final String PASS = "";
+    ArrayList<Deportista> lDeportistas = new ArrayList<>();
+    Deportista deportista;
+
+    String ruta_driver = "org.mariadb.jdbc.Driver";
+    public void llamadaDriver(String ruta) throws ClassNotFoundException {
+        Class.forName(ruta);
+    }
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response obtenerTodos() {
         try {
-            ArrayList<Deportista> lDeportistas = new ArrayList<>();
-            Class.forName("org.mariadb.jdbc.Driver");
-            try (Connection conexion = DriverManager.getConnection(URL, USER, PASS);
-                    Statement st = conexion.createStatement();
-                    ResultSet rs = st.executeQuery("SELECT * FROM deportistas")) {
+            llamadaDriver(ruta_driver);
+            try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = conexion.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM deportistas");
                 while (rs.next()) {
                     lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"), rs.getBoolean("activo"),
                             rs.getString("deporte"), rs.getString("genero")));
@@ -43,7 +50,46 @@ public class GestionaDeportistas {
         } catch (ClassNotFoundException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encuentra el driver").build();
         }
-
     }
 
+    // Ejercicio 4.2
+    @Path("/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarJugador(@PathParam("id") int id) {
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = conexion.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM deportistas WHERE id = " + id);
+                while (rs.next()) {
+                    deportista = new Deportista(rs.getInt("id"), rs.getString("nombre"), rs.getBoolean("activo"),
+                            rs.getString("genero"), rs.getString("deporte"));
+                }
+                return Response.ok(deportista).build();
+
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encuentra el driver").build();
+        }
+    }
+
+    // Ejercicio 4.3
+    // @Path("/deporte/{nombreDeporte}")
+    // @GET
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response porDeporte(@PathParam("nombreDeporte") String nombre_deporte) {
+    //     try {
+    //         try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
+
+    //         } catch (SQLException e) {
+    //             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+    //         }
+    //     } catch (ClassNotFoundException e) {
+    //         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encuentra el driver").build();
+    //     }
+    // }
 }

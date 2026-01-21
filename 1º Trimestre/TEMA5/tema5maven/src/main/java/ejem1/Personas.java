@@ -106,7 +106,7 @@ public class Personas {
 
     // Ejercicio 9
     @GET
-    @Path("/buscar")
+    @Path("/buscar2")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public String ver_3(@DefaultValue("a") @QueryParam("patron") String patron) {
         ArrayList<String> nombres = new ArrayList<>();
@@ -117,5 +117,7 @@ public class Personas {
         }
         return nombres.toString();
     }
+
+
 
 }
