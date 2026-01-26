@@ -9,7 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import jakarta.annotation.Generated;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -51,6 +53,24 @@ public class GestionaDeportistas {
 
         } catch (ClassNotFoundException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encuentra el driver").build();
+        }
+    }
+
+    @Path("/android")
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public Response subirDeportistaAndroid(Deportista d) throws ClassNotFoundException {
+        try {
+            llamadaDriver(ruta_driver);
+            Connection conexion = DriverManager.getConnection(URL, USER, PASS);
+            Statement st = conexion.createStatement();
+            st.executeUpdate(String.format("INSERT INTO deportistas (nombre, deporte) VALUES ('%s', '%s')", d.getNombre(),
+                    d.getDeporte()));
+
+            return Response.ok("subido correctamente").build();
+
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
         }
     }
 
@@ -194,29 +214,31 @@ public class GestionaDeportistas {
         }
     }
 
-    // Ejercicio 4.9
-    @Path("/xg")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response listarPorGenero(){
-        Deportista[] listadoGenero = new Deportista[lDeportistas.size()];
-        try {
-            llamadaDriver(ruta_driver);
-            try (Connection conexion = DriverManager.getConnection(URL,USER,PASS)) {
-                Statement st = conexion.createStatement();
-                ResultSet rs = st.executeQuery("SELECT * FROM deportistas");
-                while (rs.next()) {
-                    lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"), rs.getBoolean("activo"),
-                            rs.getString("genero"), rs.getString("deporte")));
-                }
-                
-                //
+    // // Ejercicio 4.9
+    // @Path("/xg")
+    // @GET
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response listarPorGenero(){
+    // Deportista[] listadoGenero = new Deportista[lDeportistas.size()];
+    // try {
+    // llamadaDriver(ruta_driver);
+    // try (Connection conexion = DriverManager.getConnection(URL,USER,PASS)) {
+    // Statement st = conexion.createStatement();
+    // ResultSet rs = st.executeQuery("SELECT * FROM deportistas");
+    // while (rs.next()) {
+    // lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"),
+    // rs.getBoolean("activo"),
+    // rs.getString("genero"), rs.getString("deporte")));
+    // }
 
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-        } catch (ClassNotFoundException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
-        }
-    }
+    // //
+
+    // } catch (Exception e) {
+    // // TODO: handle exception
+    // }
+    // } catch (ClassNotFoundException e) {
+    // return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No
+    // encontrado el driver").build();
+    // }
+    // }
 }
