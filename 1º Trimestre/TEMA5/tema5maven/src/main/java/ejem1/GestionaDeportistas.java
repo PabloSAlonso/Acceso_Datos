@@ -1,5 +1,6 @@
 package ejem1;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import jakarta.annotation.Generated;
+import jakarta.validation.metadata.ReturnValueDescriptor;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -64,8 +66,9 @@ public class GestionaDeportistas {
             llamadaDriver(ruta_driver);
             Connection conexion = DriverManager.getConnection(URL, USER, PASS);
             Statement st = conexion.createStatement();
-            st.executeUpdate(String.format("INSERT INTO deportistas (nombre, deporte) VALUES ('%s', '%s')", d.getNombre(),
-                    d.getDeporte()));
+            st.executeUpdate(
+                    String.format("INSERT INTO deportistas (nombre, deporte) VALUES ('%s', '%s')", d.getNombre(),
+                            d.getDeporte()));
 
             return Response.ok("subido correctamente").build();
 
@@ -215,30 +218,38 @@ public class GestionaDeportistas {
     }
 
     // // Ejercicio 4.9
-    // @Path("/xg")
-    // @GET
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response listarPorGenero(){
-    // Deportista[] listadoGenero = new Deportista[lDeportistas.size()];
-    // try {
-    // llamadaDriver(ruta_driver);
-    // try (Connection conexion = DriverManager.getConnection(URL,USER,PASS)) {
-    // Statement st = conexion.createStatement();
-    // ResultSet rs = st.executeQuery("SELECT * FROM deportistas");
-    // while (rs.next()) {
-    // lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"),
-    // rs.getBoolean("activo"),
-    // rs.getString("genero"), rs.getString("deporte")));
-    // }
+    @Path("/xg")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarPorGenero() {
+        ArrayList<Deportista> listadoGenero = new ArrayList<>();
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = conexion.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM deportistas");
+                while (rs.next()) {
+                    lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"),
+                            rs.getBoolean("activo"),
+                            rs.getString("genero"), rs.getString("deporte")));
+                }
+                for (Deportista deportista : lDeportistas) {
+                    if (deportista.getGenero().equals("Masculino")) {
+                        listadoGenero.add(deportista);
+                    }
+                }
+                for (Deportista deportista : lDeportistas) {
+                    if (deportista.getGenero().equals("Femenino")) {
+                        listadoGenero.add(deportista);
+                    }
+                }
+                return Response.ok(listadoGenero).build();
 
-    // //
-
-    // } catch (Exception e) {
-    // // TODO: handle exception
-    // }
-    // } catch (ClassNotFoundException e) {
-    // return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No
-    // encontrado el driver").build();
-    // }
-    // }
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
 }
