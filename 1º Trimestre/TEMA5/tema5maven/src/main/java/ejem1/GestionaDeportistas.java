@@ -12,8 +12,11 @@ import java.util.ArrayList;
 import jakarta.annotation.Generated;
 import jakarta.validation.metadata.ReturnValueDescriptor;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -287,13 +290,12 @@ public class GestionaDeportistas {
             llamadaDriver(ruta_driver);
             try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
                 Statement st = conexion.createStatement();
-                ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT id) FROM deportistas");
+                ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT(id)) FROM deportistas");
+                int contador = 0;
                 while (rs.next()) {
-                    lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"),
-                            rs.getBoolean("activo"),
-                            rs.getString("genero"), rs.getString("deporte")));
+                    contador++;
                 }
-                return Response.ok(lDeportistas).build();
+                return Response.ok(contador).build();
             } catch (SQLException e) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
             }
@@ -301,6 +303,8 @@ public class GestionaDeportistas {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
         }
     }
+
+    ArrayList<String> deportes = new ArrayList<>();
 
     // Ejercicio 4.12
     @Path("/deportes")
@@ -311,13 +315,11 @@ public class GestionaDeportistas {
             llamadaDriver(ruta_driver);
             try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
                 Statement st = conexion.createStatement();
-                ResultSet rs = st.executeQuery("");
+                ResultSet rs = st.executeQuery("SELECT Distinct(deporte) FROM deportistas");
                 while (rs.next()) {
-                    // lDeportistas.add(new Deportista(rs.getInt("id"), rs.getString("nombre"),
-                    //         rs.getBoolean("activo"),
-                    //         rs.getString("genero"), rs.getString("deporte")));
+                    deportes.add(rs.getString("deporte"));
                 }
-                return Response.ok().build();
+                return Response.ok(deportes).build();
             } catch (SQLException e) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
             }
@@ -325,4 +327,145 @@ public class GestionaDeportistas {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
         }
     }
+
+    // Ejercicio 4.13
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response crearDeportista(Deportista d) {
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection connection = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = connection.createStatement();
+                st.executeUpdate(String.format(
+                        "INSERT INTO deportistas(nombre, activo, genero, deporte) VALUES (%s, %s, %s, %s)",
+                        d.getNombre(), d.isActivo(), d.getGenero(), d.getDeporte()));
+                return Response.ok("Subido bien :/").build();
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
+
+    // Ejercicio 4.14
+    @Path("/form")
+    @POST
+    @Consumes("application/x-www-form-urlencoded")
+    public Response crearConFormulario(@FormParam("nombre") String nombre, @FormParam("activo") boolean activo,
+            @FormParam("genero") String genero, @FormParam("deporte") String deporte) {
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection connection = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = connection.createStatement();
+                st.executeUpdate(String.format(
+                        "INSERT INTO deportistas(nombre, activo, genero, deporte) VALUES (%s, %s, %s, %s)",
+                        nombre, activo, genero, deporte));
+                return Response.ok("Insertado con exito").build();
+
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
+
+    // Ejercicio 4.15
+    @Path("/adds")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response crearDeportistas(ArrayList<Deportista> deportistas) {
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection connection = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = connection.createStatement();
+                for (Deportista d : deportistas) {
+                    st.executeUpdate(String.format(
+                            "INSERT INTO deportistas(nombre, activo, genero, deporte) VALUES (%s, %s, %s, %s)",
+                            d.getNombre(), d.isActivo(), d.getGenero(), d.getDeporte()));
+                }
+                return Response.ok("Subido bien :/").build();
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
+
+    // Ejercicio 4.16
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response actualizarDeporte(Deportista d) {
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection connection = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = connection.createStatement();
+                st.executeUpdate(String.format(
+                        "UPDATE deportistas set nombre = '%s' , activo = '%s', deporte = '%s', genero = '%s' WHERE id = %d",
+                        d.getNombre(), d.isActivo(), d.getDeporte(), d.getGenero(), d.getId()));
+                return Response.ok("Subido bien :/").build();
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
+
+    // Ejercicio 4.17
+    @Path("/del/{id}")
+    @DELETE
+    public Response eliminarDeportista(@PathParam("id") int id){
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection connection = DriverManager.getConnection(URL, USER, PASS)) {
+                Statement st = connection.createStatement();
+                st.executeUpdate(String.format(
+                        "DELETE FROM deportistas WHERE id = %d", id));
+                return Response.ok("Subido bien :/").build();
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
+
+    // Ejercicio 4.18
+    @GET
+    @Path("/img/{id}/{num}")
+    public Response imagenDeportista(@PathParam("id") int id, @PathParam("num") int num){
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection conexion = DriverManager.getConnection("URL", "USER", "PASS")) {
+                Statement st = conexion.createStatement();
+                st.executeUpdate("");
+                return Response.ok("Imagen num subida correctamente").build();
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }
+
+    // Ejercicio 4.19
+    @GET
+    @Path("/img/{id}")
+    public Response imagenesDeportistas(@PathParam("id") int id){
+        try {
+            llamadaDriver(ruta_driver);
+            try (Connection conexion = DriverManager.getConnection("URL", "USER", "PASS")) {
+                Statement st = conexion.createStatement();
+                st.executeUpdate("");
+                return Response.ok("Imagen num subida correctamente").build();
+            } catch (SQLException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
+            }
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
+        }
+    }   
 }
