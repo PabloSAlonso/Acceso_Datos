@@ -1,5 +1,8 @@
 package ejem1;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -8,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import org.checkerframework.checker.units.qual.s;
 
 import jakarta.annotation.Generated;
 import jakarta.validation.metadata.ReturnValueDescriptor;
@@ -417,7 +422,7 @@ public class GestionaDeportistas {
     // Ejercicio 4.17
     @Path("/del/{id}")
     @DELETE
-    public Response eliminarDeportista(@PathParam("id") int id){
+    public Response eliminarDeportista(@PathParam("id") int id) {
         try {
             llamadaDriver(ruta_driver);
             try (Connection connection = DriverManager.getConnection(URL, USER, PASS)) {
@@ -436,13 +441,20 @@ public class GestionaDeportistas {
     // Ejercicio 4.18
     @GET
     @Path("/img/{id}/{num}")
-    public Response imagenDeportista(@PathParam("id") int id, @PathParam("num") int num){
+    @Produces("image/jpg")
+    public Response imagenDeportista(@PathParam("id") int id, @PathParam("num") int num) throws FileNotFoundException {
         try {
             llamadaDriver(ruta_driver);
-            try (Connection conexion = DriverManager.getConnection("URL", "USER", "PASS")) {
+            try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
+                String ruta = "";
                 Statement st = conexion.createStatement();
-                st.executeUpdate("");
-                return Response.ok("Imagen num subida correctamente").build();
+                ResultSet rs = st.executeQuery(
+                        "SELECT nombre FROM imagenes WHERE id = " + id + "AND nombre LIKE '" + id + "_" + num + "_%'");
+                while (rs.next()) {
+                    ruta = "C:\\imagenes\\imagenes\\" + rs.getString("nombre");
+                }
+                FileInputStream fis = new FileInputStream(new File(ruta));
+                return Response.ok(fis).build();
             } catch (SQLException e) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
             }
@@ -454,18 +466,24 @@ public class GestionaDeportistas {
     // Ejercicio 4.19
     @GET
     @Path("/img/{id}")
-    public Response imagenesDeportistas(@PathParam("id") int id){
+    @Produces("image/jpg")
+    public Response imagenesDeportistas(@PathParam("id") int id) throws FileNotFoundException {
         try {
             llamadaDriver(ruta_driver);
-            try (Connection conexion = DriverManager.getConnection("URL", "USER", "PASS")) {
+            try (Connection conexion = DriverManager.getConnection(URL, USER, PASS)) {
+                String ruta = "";
                 Statement st = conexion.createStatement();
-                st.executeUpdate("");
-                return Response.ok("Imagen num subida correctamente").build();
+                ResultSet rs = st.executeQuery(String.format("SELECT deportistas.nombre, imagenes.nombre FROM deportistas JOIN imagenes USING (id) WHERE id = %d", id));
+                while (rs.next()) {
+                    ruta = "C:\\imagenes\\imagenes\\" + rs.getString("imagenes.nombre");
+                }
+                FileInputStream fis = new FileInputStream(new File(ruta));
+                return Response.ok(fis).build();
             } catch (SQLException e) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error SQL").build();
             }
         } catch (ClassNotFoundException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No encontrado el driver").build();
         }
-    }   
+    }
 }
